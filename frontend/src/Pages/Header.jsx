@@ -125,13 +125,19 @@ const Header = () => {
           </NavDropdown>
         </Nav>
         
-        <Button 
-          variant="primary" 
-          style={{ color: 'white', borderColor: 'white', marginLeft:'630px'}}
-          onClick={handleLogout} 
-        >
-          Logout
-        </Button>
+        <form class="d-flex ms-auto order-5">
+          <Button
+            variant="primary"
+            style={{
+              color: 'white',
+              borderColor: 'white',
+              marginRight: '10px',
+            }}
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+          </form>
       </Navbar.Collapse>
     </Navbar>
   );

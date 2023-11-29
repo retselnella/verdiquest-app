@@ -254,7 +254,7 @@ const Rewards = () => {
                                     <Form.Control type="number" placeholder="Enter points required" value={pointsRequired} onChange={handlePointsRequiredChange} />
                                 </Form.Group>
                                 <br />
-                                <Button variant="primary" type="submit">Update</Button>
+                                <Button variant="primary" type="submit" style={{ color:"white" }}>Update</Button>
                             </Form>
                         </Modal.Body>
                     </Modal>

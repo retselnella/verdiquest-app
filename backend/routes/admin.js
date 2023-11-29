@@ -3,8 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
-const { checkAdminCredentials, createAdmin, getUserCredential , getCoordinatorList, getOrganizationList, getSubscriberList, getEvents, addTask, getTasks, getCountUser, getCountCoordinator, 
-getCountOrganization, getCountSubscriber, markTaskAsInactive , editTask, softDeleteTask, getTotalParticipants, getParticipants, getTaskNameById,getParticipantsForTask, addProduct, getRewards, editReward, deleteReward} = require('../util/db.js');
+const { createAdmin, checkAdminCredentials, createPerson, addCoordinator, addOrganization, addTask, addProduct, getRewards, editReward, deleteReward, getUserCredential, getCoordinatorList, getOrganizationList, getSubscriberList, getEvents, markTaskAsInactive, editTask, softDeleteTask, getCountUser, getCountCoordinator, getCountOrganization, getCountSubscriber, getTotalParticipants, getParticipants, getTaskNameById, getTasks, getParticipantsForTask} = require('../util/db.js');
 
 const router = express.Router();
 
@@ -131,43 +130,12 @@ exports.markTaskAsInactive = (id) => {
     });
 };
 
-router.post('/task', async (req, res) => {
-    const { taskName, taskDescription, taskPoints, taskDifficulty } = req.body;
-
-    const startDate = new Date(); // Current Date
-    const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 3); // Current Date + 3 days
-
-    try {
-        const result = await addTask(taskName, taskDescription, taskPoints, taskDifficulty, startDate, endDate);
-
-        if (result.affectedRows === 1) {
-            res.status(201).json({ message: 'Task added successfully' });
-        } else {
-            res.status(500).json({ message: 'Failed to add task' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-router.get('/tasks', async (_req, res) => {
-    try {
-        const taskData = await getTasks();
-        res.status(200).json(taskData);
-    } catch (error) {
-        console.error('Server error:', error);
-        res.status(500).json({ message: 'An error occurred while retrieving tasks data' });
-    }
-});
-
 router.put('/task/:id', async (req, res) => {
     const { id } = req.params; 
-    const { taskName, taskDescription, taskPoints, taskDifficulty } = req.body;
+    const { taskName, taskDescription, taskDuration, taskPoints, taskDifficulty } = req.body;
 
     try {
-        const result = await editTask(id, taskName, taskDescription, taskPoints, taskDifficulty);
+        const result = await editTask(id, taskName, taskDescription, taskDuration, taskPoints, taskDifficulty);
 
         if (result.affectedRows === 1) {
             res.status(200).json({ message: 'Task updated successfully' });
@@ -271,14 +239,11 @@ router.get('/subscriber-count', async (_req, res) => {
  * @returns {object} - The result of the query
  */
 router.post('/task', async (req, res) => {
-    const { taskName, taskDescription, taskPoints, taskDifficulty } = req.body;
+    const { taskDifficulty, organizationId, taskName, taskDescription, taskDuration, taskPoints, Status } = req.body;
+
     try {
-        const result = await addTask(
-            taskName,
-            taskDescription,
-            taskPoints,
-            taskDifficulty
-        );
+        const result = await addTask(taskDifficulty, organizationId, taskName, taskDescription, taskDuration, taskPoints, Status);
+
         if (result.affectedRows === 1) {
             res.status(201).json({ message: 'Task added successfully' });
         } else {
@@ -289,6 +254,7 @@ router.post('/task', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 // This is for the fetch Task 
 router.get('/tasks', async (_req, res) => {
@@ -415,6 +381,47 @@ router.delete('/rewards/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+//add organization
+router.post('/organization', async (req, res) => {
+    const { organizationName, organizationAddress, organizationType } = req.body;
+    try {
+      const result = await addOrganization(
+        organizationName,
+        organizationAddress,
+        organizationType
+      );
+      if (result.affectedRows === 1) {
+        res.status(201).json({ message: 'Organization added successfully' });
+      } else {
+        res.status(500).json({ message: 'Failed to add organization' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  router.post('/addCoordinator', async (req, res) => {
+    const { OrganizationId, Rank, Username, Password } = req.body;
+
+    try {
+        const resultPerson = await createPerson(null, '', '', '', '', '', '', '', '', '', '');
+        const PersonId = resultPerson.insertId;
+
+        const resultCoordinator = await addCoordinator(OrganizationId, Rank, PersonId, Username, Password);
+
+        if (resultCoordinator.affectedRows === 1) {
+            res.status(201).json({ message: 'Coordinator added successfully' });
+        } else {
+            res.status(500).json({ message: 'Failed to add coordinator' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+  
 
 module.exports = router;
 
