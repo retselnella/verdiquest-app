@@ -1,0 +1,20 @@
+$primary: #7B904B;
+.table{
+    border-top-left-radius: 10px;
+}
+.nav-link:hover {
+    color: #7B904B !important;
+    background-color: white;
+    border-radius: 10px !important;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+    background-color: #3D691B;
+    color:black !important;
+}
+.navDropdownItem:hover {
+    color: black !important;  /* Using !important to override any other styles, though it's better to avoid !important where possible. */
+    background-color: #f5f5f5;  /* This is optional, but it can help make the hover effect more apparent. */
+  }
+
+@import '~bootstrap/scss/bootstrap.scss';

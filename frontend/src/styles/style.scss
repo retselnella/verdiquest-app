@@ -1,0 +1,509 @@
+@import "./_variables";
+body{
+    font-family: $fontFamily;
+}
+.bodeh {
+  position: relative; /* Essential for the pseudo-element to position relative to this */
+  background-color: #FFFFDD;
+  z-index: 0;
+}
+
+.bodeh::before {
+  content: ""; /* Essential for the pseudo-element to be generated */
+  background-image: url(../Images/bgpic.png);
+  opacity: 0.5; /* Adjust this value as needed, 0 is fully transparent and 1 is fully opaque */
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.div{
+    background-color: #7B904B;
+    height: 60px;
+    width:auto;
+    padding-top: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+.div3{
+    padding: 5px;
+}
+.div2{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 15px;
+}
+.logoContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    padding: 2px;
+    .logo{
+        height: 40px;
+        width: 40px;
+        margin-left: 5px;
+    
+    }
+    .active {
+        background-color: white;
+        color: #7B904B;
+      }
+    h2.title{
+        font-size: 31.42px;
+    }
+    h5.title{
+        padding-top: 6px;
+        margin-left: 5px;
+    }
+    a{
+        text-decoration: none !important;
+        color: white;
+        margin-top: 5px;
+        margin-left: 10px;
+        padding: 5px;
+
+    }
+    a:hover{
+        background-color: white;
+        color: #7B904B;
+        border-color: black;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .logout{
+        float: right;
+        margin-left: 750px;
+        height: 35px;
+        border-color: white;
+        background-color: #7B904B;
+        border-radius: 5px;
+        color: white;
+    }
+    .logout:hover{
+        background-color: white;
+        border-color: #7B904B;
+        color: #7B904B;
+    }   
+    .dropbtn {
+        background-color: #7B904B;
+        color: white;
+        padding: 5px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #7B904B;
+        opacity: 90%;
+        width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+      
+
+      .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: white;
+        color: #7B904B;
+    }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: white;
+        color: #7B904B;
+        padding: 5px;
+        border-radius: 5px;
+      }   
+}
+
+
+
+.table-user-container, .table-organization-container, .table-subscriber-container, .table-reward-container {
+  margin: 40px 0 0 0 ; 
+}
+
+.table-responsive {
+  margin: 0 auto; 
+  max-width: calc(100% - 500px); 
+}
+
+// This is for the TASKS table 
+.table-task-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  .add-task-btn {
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+  }
+  
+  .add-task-btn{
+    background-color: #3D691B;
+    border-color: #3D691B;
+  }
+  
+  .add-task-btn:hover{
+    border-color: #7B904B;
+    color: white;
+    background-color: #7B904B;
+  }
+
+  table {
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 5%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 15%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 10%;
+    }
+    
+    th:nth-child(5), td:nth-child(5) { 
+      width: 7%;
+    }
+
+    th:nth-child(6), td:nth-child(6) { 
+      width: 7%;
+    }
+
+    th:nth-child(7), td:nth-child(7) {
+        width: 8%; 
+    }
+  }
+}
+// END FOR TASK
+
+// This is for the EVENT table 
+.table-event-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+      width: 2%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 2%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 5%;
+    }
+
+    th:nth-child(4), td:nth-child(4) { 
+      width: 15%;
+    }
+    th:nth-child(5), td:nth-child(5) { 
+      width: 1%;
+    }
+
+    th:nth-child(6), td:nth-child(6) { 
+      width: 1%;
+    }
+  }
+}
+// END FOR EVENT
+
+// This is for the REWARD table 
+.table-reward-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+      align-items: center;
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 1%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 5%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 15%;
+    }
+
+    th:nth-child(4), td:nth-child(4) { 
+      width: 1%;
+    }
+    th:nth-child(5), td:nth-child(5) { 
+      width: 1%;
+    }
+    th:nth-child(6), td:nth-child(6) { 
+      width: 1%;
+    }
+
+    th:nth-child(7), td:nth-child(7) { 
+      width: 1%; 
+    }
+
+  }
+}
+
+
+// This is for the COORDINATOR table 
+.table-coordinator-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 0.15%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 0.15%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 0.15%;
+    }
+
+    th:nth-child(4), td:nth-child(4) { 
+      width: 0.25%;
+    }
+  }
+}
+// END FOR COORDINATOR 
+
+// This is for the ORGANIZATION table 
+.table-organization-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 3%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 7%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 8%;
+    }
+
+    th:nth-child(4), td:nth-child(4) { 
+      width: 7%;
+    }
+  }
+}
+// END FOR ORGANIZATION
+
+// This is for the ORGANIZATION table 
+.table-subscriber-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 3%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 7%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 8%;
+    }
+
+    th:nth-child(4), td:nth-child(4) { 
+      width: 7%;
+    }
+  }
+}
+// END FOR SUBSCRIBER
+
+.btn{
+  background-color: #3D691B;
+  border-color: #3D691B;
+}
+
+.btn:hover{
+  border-color: #7B904B;
+  color: white;
+  background-color: #7B904B;
+}
+
+//Participants Table
+.table-participant-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+      align-items: center;
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 1%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 5%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 10%;
+    }
+
+    th:nth-child(4), td:nth-child(4) { 
+      width: 3%;
+    }
+    th:nth-child(5), td:nth-child(5) { 
+      width: 2%;
+    }
+    th:nth-child(6), td:nth-child(6) { 
+      width: 4%;
+    }
+  }
+}
+
+//Participants Table
+.task-participant-responsive {
+  margin: 10px auto 0; 
+  max-width: calc(100% - 500px); 
+
+  table {
+  
+    tr{
+      background-color: #7B904B;
+      opacity: 90%;
+    }
+    
+    th, td {
+      text-align: center;
+      color: white !important;
+      padding: 8px 12px; 
+      align-items: center;
+    }
+
+    th:nth-child(1), td:nth-child(1) { 
+        width: 0.05%;
+    }
+
+    th:nth-child(2), td:nth-child(2) { 
+      width: 0.1%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { 
+      width: 0.15%;
+    }
+  }
+}
+
+
+
+
