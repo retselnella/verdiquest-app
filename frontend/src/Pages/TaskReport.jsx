@@ -51,14 +51,14 @@ const TaskReport = () => {
             <div className="table-participant-responsive">
             <table className="table table-bordered">
                 <thead>
-                <tr>
-                    <th>TID</th>
-                    <th>Task Name</th>
-                    <th>Task Desc</th>
-                    <th>Task Pts</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
+                        <tr>
+                            <th>TID</th>
+                            <th>Task Name</th>
+                            <th>Task Desc</th>
+                            <th>Task Pts</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
                 </thead>
                 <tbody>
                 {(tasks.length > 0) ? (
@@ -72,9 +72,9 @@ const TaskReport = () => {
                         <td>{task.Status}</td>
                         <td>
                             <Button 
-                            style={{ backgroundColor: 'black', color: 'white', width: '50%' }} 
+                            style={{ backgroundColor: 'black', color: 'white' }} 
                             onClick={() => handleViewParticipants(task.TaskId)}>
-                            View
+                            View Participants
                             </Button>
                         </td>
                         </tr>

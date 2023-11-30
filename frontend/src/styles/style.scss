@@ -141,7 +141,10 @@ body{
       }   
 }
 
-
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
 
 .table-user-container, .table-organization-container, .table-subscriber-container, .table-reward-container {
   margin: 40px 0 0 0 ; 
@@ -161,12 +164,10 @@ body{
     display: block;
     margin-bottom: 10px;
     color: white;
-  }
-  
-  .add-task-btn{
     background-color: #3D691B;
     border-color: #3D691B;
   }
+  
   
   .add-task-btn:hover{
     border-color: #7B904B;
@@ -240,18 +241,18 @@ body{
     }
 
     th:nth-child(3), td:nth-child(3) { 
-      width: 5%;
+      width: 3%;
     }
 
     th:nth-child(4), td:nth-child(4) { 
       width: 15%;
     }
     th:nth-child(5), td:nth-child(5) { 
-      width: 1%;
+      width: 3%;
     }
 
     th:nth-child(6), td:nth-child(6) { 
-      width: 1%;
+      width: 3%;
     }
   }
 }
@@ -303,6 +304,19 @@ body{
     }
 
   }
+  .add-reward-btn {
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    background-color: #3D691B;
+    border-color: #3D691B;
+  }
+  
+  .add-reward-btn:hover {
+    border-color: #7B904B;
+    color: white;
+    background-color: #7B904B;
+  }
 }
 
 
@@ -310,14 +324,29 @@ body{
 .table-coordinator-responsive {
   margin: 10px auto 0; 
   max-width: calc(100% - 500px); 
+  
+  .add-coordinator-btn {
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    background-color: #3D691B;
+    border-color: #3D691B;
+  }
+  
+  .add-coodinator-btn:hover {
+    border-color: #7B904B;
+    color: white;
+    background-color: #7B904B;
+  }
+
 
   table {
-  
+
     tr{
       background-color: #7B904B;
       opacity: 90%;
     }
-    
+
     th, td {
       text-align: center;
       color: white !important;
@@ -337,6 +366,10 @@ body{
     }
 
     th:nth-child(4), td:nth-child(4) { 
+      width: 0.25%;
+    }
+    
+    th:nth-child(5), td:nth-child(5) { 
       width: 0.25%;
     }
   }
@@ -376,6 +409,20 @@ body{
     th:nth-child(4), td:nth-child(4) { 
       width: 7%;
     }
+  }
+
+  .add-organization-btn {
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    background-color: #3D691B;
+    border-color: #3D691B;
+  }
+  
+  .add-organization-btn:hover {
+    border-color: #7B904B;
+    color: white;
+    background-color: #7B904B;
   }
 }
 // END FOR ORGANIZATION
@@ -448,62 +495,28 @@ body{
     }
 
     th:nth-child(1), td:nth-child(1) { 
-        width: 1%;
+        width: 3%;
     }
 
     th:nth-child(2), td:nth-child(2) { 
-      width: 5%;
-    }
-
-    th:nth-child(3), td:nth-child(3) { 
       width: 10%;
     }
 
+    th:nth-child(3), td:nth-child(3) { 
+      width: 15%;
+    }
+
     th:nth-child(4), td:nth-child(4) { 
-      width: 3%;
+      width: 5%;
     }
     th:nth-child(5), td:nth-child(5) { 
-      width: 2%;
+      width: 1%;
     }
     th:nth-child(6), td:nth-child(6) { 
-      width: 4%;
+      width: 5%;
     }
   }
 }
-
-//Participants Table
-.task-participant-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
-
-  table {
-  
-    tr{
-      background-color: #7B904B;
-      opacity: 90%;
-    }
-    
-    th, td {
-      text-align: center;
-      color: white !important;
-      padding: 8px 12px; 
-      align-items: center;
-    }
-
-    th:nth-child(1), td:nth-child(1) { 
-        width: 0.05%;
-    }
-
-    th:nth-child(2), td:nth-child(2) { 
-      width: 0.1%;
-    }
-
-    th:nth-child(3), td:nth-child(3) { 
-      width: 0.15%;
-    }
-  }
-}
-
 
 
 

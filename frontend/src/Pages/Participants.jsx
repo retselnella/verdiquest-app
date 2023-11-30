@@ -48,10 +48,10 @@ const Participants = () => {
       <Header />
       <div className='div3'>
         <h3 style={{ textAlign: 'center' }}>Participants for {eventName}</h3> 
-        <div className="table-participant-responsive">
+        <div className="table-participants-responsive">
           <table className="table table-bordered">
             <thead>
-              <tr>
+            <tr>
                 <th>PID</th>
                 <th>Organization Name</th>
                 <th>Email</th>

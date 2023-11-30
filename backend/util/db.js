@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'verdiquest',
+    database: 'verdiquest_db',
 });
 
 exports.checkAdminCredentials = (username, password) => {
@@ -50,8 +50,10 @@ exports.createAdmin = (username, password) => {
 
             try {
                 const hashedPassword = await bcrypt.hash(password, 14);
-                const insertQuery = 'INSERT INTO adminstrator (Username, Password, OrganizationId) VALUES (?, ?, 1)';
-                connection.query(insertQuery, [username, hashedPassword], (error, results) => {
+                const organizationId = 1;
+
+                const insertQuery = 'INSERT INTO adminstrator (Username, Password, OrganizationId) VALUES (?, ?, ?)';
+                connection.query(insertQuery, [username, hashedPassword, organizationId], (error, results) => {
                     if (error) {
                         return reject(error);
                     }
@@ -108,10 +110,21 @@ exports.getUserCredential = (searchTerm = '', filter = '') => {
     });
 };
 
-
 exports.getCoordinatorList = () => {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM coordinator`;
+        const query = `
+        SELECT
+            c.CoordinatorId,
+            c.OrganizationId,
+            c.PersonId,
+            c.Rank,
+            c.Username,
+            c.Password,
+            o.OrganizationName
+        FROM
+            coordinator c
+        JOIN
+            organization o ON c.OrganizationId = o.OrganizationId`;
 
         connection.query(query, (error, results) => {
             if (error) {
@@ -120,13 +133,31 @@ exports.getCoordinatorList = () => {
             resolve(results);
         });
     });
-};
+}; 
 
+/**
+ * Get the list of organizations
+ * @returns {Promise} - A promise that resolves with the list of organizations
+ */
 exports.getOrganizationList = () => {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM organization`;
+      const query = 'SELECT OrganizationId, OrganizationName, OrganizationAddress, OrganizationType FROM Organization';
+      
+      connection.query(query, (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      });
+    });
+  };
 
-        connection.query(query, (error, results) => {
+//add organization
+exports.addOrganization = (organizationName, organizationAddress, organizationType) => {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO organization (OrganizationName, OrganizationAddress, OrganizationType) VALUES (?, ?, ?)';
+
+        connection.query(query, [organizationName, organizationAddress, organizationType], (error, results) => {
             if (error) {
                 return reject(error);
             }
@@ -134,6 +165,8 @@ exports.getOrganizationList = () => {
         });
     });
 };
+
+
 
 exports.getSubscriberList = () => {
     return new Promise((resolve, reject) => {
@@ -160,13 +193,11 @@ exports.getEvents = () => {
         });
     });
 };
-exports.addTask = (taskName, taskDescription, taskPoints, taskDifficulty) => {
+exports.addTask = (taskDifficulty, organizationId, taskName, taskDescription, taskDuration, taskPoints, Status) => {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO dailytask (TaskName, TaskDescription, TaskPoints, DifficultyId, Status) VALUES (?, ?, ?, ?, ?)';
-        const difficultyId = taskDifficulty;
-        const status = 'Active';
+        const query = 'INSERT INTO dailytask (DifficultyId, OrganizationId, TaskName, TaskDescription, TaskDuration, TaskPoints, Status) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-        connection.query(query, [taskName, taskDescription, taskPoints, difficultyId, status], (error, results) => {
+        connection.query(query, [taskDifficulty, organizationId, taskName, taskDescription, taskDuration, taskPoints, Status], (error, results) => {
             if (error) {
                 return reject(error);
             }
@@ -190,7 +221,17 @@ exports.markTaskAsInactive = (id) => {
 
 exports.getTasks = () => {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM dailytask WHERE isDeleted = false`;
+        const query = `
+            SELECT 
+                dt.*, 
+                o.OrganizationName 
+            FROM 
+                dailytask dt
+            JOIN 
+                organization o ON dt.OrganizationId = o.OrganizationId
+            WHERE 
+                dt.isDeleted = false`;
+                
         connection.query(query, (error, results) => {
             if (error) {
                 return reject(error);
@@ -200,11 +241,11 @@ exports.getTasks = () => {
     });
 };
 
-exports.editTask = (id, taskName, taskDescription, taskPoints, taskDifficulty) => {
+exports.editTask = (id, taskName, taskDescription, taskDuration, taskPoints, taskDifficulty) => {
     return new Promise((resolve, reject) => {
-        const query = 'UPDATE dailytask SET TaskName = ?, TaskDescription = ?, TaskPoints = ?, DifficultyId = ? WHERE TaskId = ?';
+        const query = 'UPDATE dailytask SET TaskName = ?, TaskDescription = ?, TaskDuration = ?, TaskPoints = ?, DifficultyId = ? WHERE TaskId = ?';
         
-        connection.query(query, [taskName, taskDescription, taskPoints, taskDifficulty, id], (error, results) => {
+        connection.query(query, [taskName, taskDescription, taskDuration, taskPoints, taskDifficulty, id], (error, results) => {
             if (error) {                
                 return reject(error);
             }
@@ -212,6 +253,19 @@ exports.editTask = (id, taskName, taskDescription, taskPoints, taskDifficulty) =
         });
     });
 };
+
+// exports.deleteTask = (id) => {
+//     return new Promise((resolve, reject) => {
+//         const query = 'DELETE FROM dailytask WHERE TaskId = ?';
+
+//         connection.query(query, [id], (error, results) => {
+//             if (error) {                
+//                 return reject(error);
+//             }
+//             resolve(results);
+//         });
+//     });
+// };
 
 exports.softDeleteTask = (id) => {
     return new Promise((resolve, reject) => {
@@ -269,34 +323,6 @@ exports.getCountSubscriber = () => {
     return new Promise((resolve, reject) => {
         const query = `SELECT COUNT(*) FROM subscription`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
-};
-
-exports.addTask = (taskName, taskDescription, taskPoints, taskDifficulty) => {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO dailytask (TaskName, TaskDescription, TaskPoints, DifficultyId, Status) VALUES (?, ?, ?, ?, ?)';
-        const difficultyId = taskDifficulty; 
-        const status = 'Active'; 
-        
-        connection.query(query, [taskName, taskDescription, taskPoints, difficultyId, status], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
-};
-
-
-exports.getTasks = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM dailytask WHERE isDeleted = false`;
         connection.query(query, (error, results) => {
             if (error) {
                 return reject(error);
@@ -401,9 +427,8 @@ exports.getParticipantsForTask = (taskId) => {
 
 exports.addProduct = (productId, productName, productDescription, productSize, productQuantity, pointsRequired) => {
     return new Promise((resolve, reject) => {
-        const organizationId = 1;
-        const query = 'INSERT INTO products (ProductId, OrganizationId, ProductName, ProductDescription, ProductSize, ProductQuantity, PointsRequired) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        connection.query(query, [productId, organizationId, productName, productDescription, productSize, productQuantity, pointsRequired], (error, results) => {
+        const query = 'INSERT INTO products (ProductId, ProductName, ProductDescription, ProductSize, ProductQuantity, PointsRequired) VALUES (?, ?, ?, ?, ?, ?)';
+        connection.query(query, [productId, productName, productDescription, productSize, productQuantity, pointsRequired], (error, results) => {
             if (error) {
                 return reject(error);
             }
@@ -447,3 +472,57 @@ exports.deleteReward = (productId) => {
         });
     });
 };
+
+  /**
+ * Create a new person with default values
+ * @param {string} UserId - User ID (can be null)
+ * @param {string} FirstName - First name (empty string by default)
+ * @param {string} LastName - Last name (empty string by default)
+ * @param {string} Initial - Initial (empty string by default)
+ * @param {string} Birthdate - Birthdate (empty string by default)
+ * @param {string} PhoneNumber - Phone number (empty string by default)
+ * @param {string} Gender - Gender (empty string by default)
+ * @param {string} Street - Street (empty string by default)
+ * @param {string} Barangay - Barangay (empty string by default)
+ * @param {string} City - City (empty string by default)
+ * @param {string} Province - Province (empty string by default)
+ * @returns {Promise} - A promise that resolves with the result of the database query
+ */
+  exports.createPerson = (
+    UserId = null,
+    FirstName = '',
+    LastName = '',
+    Initial = '',
+    Birthdate = '',
+    PhoneNumber = '',
+    Gender = '',
+    Street = '',
+    Barangay = '',
+    City = '',
+    Province = ''
+  ) => {
+    return new Promise((resolve, reject) => {
+      const query = 'INSERT INTO Person (UserId, FirstName, LastName, Initial, Birthdate, PhoneNumber, Gender, Street, Barangay, City, Province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      const values = [UserId, FirstName, LastName, Initial, Birthdate, PhoneNumber, Gender, Street, Barangay, City, Province];
+  
+      connection.query(query, values, (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      });
+    });
+  };
+
+    exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
+        return new Promise((resolve, reject) => {
+            const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
+
+            connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(results);
+            });
+        });
+    };

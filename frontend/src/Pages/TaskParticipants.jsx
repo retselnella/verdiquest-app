@@ -46,7 +46,7 @@ const TaskParticipants = () => {
             <Header />
             <div className='div3'>
                 <h3 style={{ textAlign: 'center' }}>Participants for {taskName}</h3> 
-                <div className="task-participant-responsive">
+                <div className="table-participant-responsive">
                     <table className="table table-bordered">
                         <thead>
                             <tr>

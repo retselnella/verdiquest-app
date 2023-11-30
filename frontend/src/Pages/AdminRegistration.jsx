@@ -4,7 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 const AdminRegistration = () => {
     const [formData, setFormData] = useState({
         username: '',
-        password: ''
+        password: '',
+
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
