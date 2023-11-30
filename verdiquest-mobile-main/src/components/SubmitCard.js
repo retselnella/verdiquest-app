@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   profileContainer: {
-    height: 120,
-    width: 120,
-    borderRadius: 120 / 2,
+    height: 110,
+    width: 110,
+    borderRadius: 110 / 2,
     marginTop: -5,
     backgroundColor: theme.colors.primary,
     justifyContent: "center",

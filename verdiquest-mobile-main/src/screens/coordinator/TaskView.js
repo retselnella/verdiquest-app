@@ -24,9 +24,10 @@ const TaskView = ({ route }) => {
   const [selectedDifficulty, setSelectedDifficulty] = useState(initialValue);
   const [difficultyData, setDifficultyData] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [initial, setInitial] = useState(true);
   const localhost = ipAddress;
-
-  const [imageUri, setImageUri] = useState(null);
+  const imageSource = { uri: `${localhost}/img/task/${taskData.TaskImage}` };
+  const [taskCover, setTaskCover] = useState(imageSource);
 
   const [editTaskData, setEditTaskData] = useState({
     taskName: taskData.TaskName,
@@ -59,11 +60,36 @@ const TaskView = ({ route }) => {
     navigation.navigate("ViewSubmission", { taskData: editTaskData });
   };
 
+  const uploadImage = async () => {
+    let formData = new FormData();
+    formData.append("filePath", "/images/task");
+    formData.append("taskId", editTaskData.taskId);
+    formData.append("image", {
+      uri: taskCover.uri,
+      type: "image/jpeg",
+      name: "upload.jpg",
+    });
+
+    try {
+      const response = await axios.post(
+        `${localhost}/coordinator/upload/updateTaskImage`,
+        formData
+      );
+
+      const result = await response.data;
+      return result; // Assuming the server returns the path of the uploaded image
+    } catch (error) {
+      console.error("Error during image upload: ", error.message);
+      return null;
+    }
+  };
+
   const handleEditSave = async () => {
     if (isEditing) {
       if (isSubmitting) return;
       setIsSubmitting(true);
       try {
+        await uploadImage();
         const response = await axios.post(
           `${localhost}/coordinator/updateTask`,
           editTaskData
@@ -77,34 +103,30 @@ const TaskView = ({ route }) => {
       }
     }
     setIsEditing(!isEditing);
+    setInitial(!initial);
   };
 
   const updateField = (field, value) => {
     setEditTaskData({ ...editTaskData, [field]: value });
   };
 
-  const pickImage = async () => {
+  // UPDATING IMAGE --------------------------------------------------------
+  const handleEditPress = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      Alert.alert(
-        "Permission Required",
-        "You need to allow access to your photos to upload an image."
-      );
+    if (!permissionResult.granted) {
+      alert("Request Change Denied!");
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets) {
-      setImageUri(result.assets[0].uri);
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.canceled) {
+      return;
     }
+
+    setTaskCover({ uri: pickerResult.uri });
   };
+  //-------------------------------------------------------------------------------
 
   useEffect(() => {
     fetchDifficulty();
@@ -117,9 +139,13 @@ const TaskView = ({ route }) => {
   return (
     <View style={styles.background}>
       <View style={styles.eventDetailsContainer}>
-        <TouchableOpacity onPress={pickImage} style={styles.imagePlaceholder}>
-          {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.img} />
+        <TouchableOpacity
+          style={styles.imagePlaceholder}
+          disabled={initial}
+          onPress={handleEditPress}
+        >
+          {taskCover ? (
+            <Image source={taskCover} style={styles.img} />
           ) : (
             <Text style={styles.imagePlaceholderText}>Select Image</Text>
           )}
@@ -196,7 +222,7 @@ const TaskView = ({ route }) => {
           <Button
             title={isEditing ? "Save" : "Edit"}
             onPress={handleEditSave}
-            disabled={isEditing}
+            disabled={isSubmitting}
           />
         </View>
       </View>

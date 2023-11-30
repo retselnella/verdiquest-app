@@ -5,17 +5,18 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
+  Image,
 } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import ipAddress from "../../database/ipAddress";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ViewSubmission = ({ route }) => {
   const { taskData } = route.params;
   const localhost = ipAddress;
 
   const [fetchedTasks, setFetchedTasks] = useState([]);
-  console.log(taskData);
   //FOR NAVIGATION
   const navigation = useNavigation();
   const goToViewSubmissionUser = (item, onTaskFetch) => {
@@ -49,41 +50,51 @@ const ViewSubmission = ({ route }) => {
   }, [taskData.UserDailyTaskId]);
 
   return (
-    <View style={styles.background}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.taskName}>
-          {taskData.taskName || taskData.TaskName}
-        </Text>
-      </View>
-      {/* Content ScrollView */}
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
-      >
-        {fetchedTasks != null && fetchedTasks.length > 0 ? (
-          fetchedTasks.map((item) => (
-            <View key={item.TaskId} style={styles.cardContainer}>
-              <View style={styles.imagePlaceholder} />
-              <View style={styles.textContainer}>
-                <Text style={styles.name}>
-                  {item.FirstName} {item.LastName}
-                </Text>
-                <Text style={styles.status}>Status: {item.Status}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.background}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.taskName}>
+            {taskData.taskName || taskData.TaskName}
+          </Text>
+          <View style={styles.divider}></View>
+        </View>
+        {/* Content ScrollView */}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          {fetchedTasks != null && fetchedTasks.length > 0 ? (
+            fetchedTasks.map((item) => (
+              <View key={item.TaskId} style={styles.cardContainer}>
+                <View style={styles.imagePlaceholder}>
+                  <Image
+                    source={{
+                      uri: `${localhost}/img/profilepicture/${item.ProfilePicture}`,
+                    }}
+                    style={styles.imageStyle}
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.name}>
+                    {item.FirstName} {item.LastName}
+                  </Text>
+                  <Text style={styles.status}>Status: {item.Status}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => goToViewSubmissionUser(item, fetchTasks)}
+                >
+                  <Text style={styles.buttonText}>View Submission</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => goToViewSubmissionUser(item, fetchTasks)}
-              >
-                <Text style={styles.buttonText}>View Submission</Text>
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          <Text>No user submissions.</Text>
-        )}
-      </ScrollView>
-    </View>
+            ))
+          ) : (
+            <Text>No user submissions.</Text>
+          )}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -100,7 +111,7 @@ const styles = StyleSheet.create({
 
   header: {
     backgroundColor: "#f5f5f5", // Header background color
-    paddingVertical: 20, // Padding for the header
+    paddingTop: 10, // Padding for the header
     paddingHorizontal: 16, // Padding for the header
     justifyContent: "center", // Center content horizontally
     alignItems: "center", // Center content vertically
@@ -163,6 +174,20 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 14,
     fontWeight: "bold",
+  },
+  divider: {
+    width: "80%",
+    height: 1,
+    backgroundColor: "#161616",
+    marginTop: 10,
+  },
+  imageStyle: {
+    height: 50,
+    width: 50,
+    resizeMode: "cover",
+    borderRadius: 50 / 2,
+    borderColor: "black",
+    borderWidth: 0.5,
   },
   // ... other styles if needed
 });

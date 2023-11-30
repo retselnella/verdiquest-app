@@ -14,18 +14,24 @@ import * as ImagePicker from "expo-image-picker";
 import { TaskProvider, TaskContext } from "../../navigation/TaskContext";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import axios from "axios";
+import ipAddress from "../../database/ipAddress";
 
 const CreateDashboardComponent = ({ coordinator, onTaskCreated }) => {
-  const { submitTask, fetchDifficulty } = useContext(TaskContext);
+  const { fetchDifficulty } = useContext(TaskContext);
   const navigation = useNavigation();
+  const imageSource = {
+    uri: `${localhost}/img/task/${coordinator.TaskImage}`,
+  };
+  const localhost = ipAddress;
 
   const [selectedDifficulty, setSelectedDifficulty] = useState(1);
   const [taskDurationHours, setTaskDurationHours] = useState("");
   const [difficultyData, setDifficultyData] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [taskCover, setTaskCover] = useState(imageSource);
 
   const [taskData, setTaskData] = useState({
-    imageUri: null,
     organizationId: coordinator.OrganizationId,
     difficultyId: selectedDifficulty,
     taskName: "",
@@ -62,7 +68,40 @@ const CreateDashboardComponent = ({ coordinator, onTaskCreated }) => {
     });
 
     if (!result.canceled && result.assets) {
-      updateTaskData("imageUri", result.assets[0].uri);
+      setTaskCover({ uri: result.uri });
+    }
+  };
+
+  const uploadImage = async () => {
+    let formData = new FormData();
+    formData.append("filePath", "/images/task");
+    for (const key in taskData) {
+      if (taskData.hasOwnProperty(key)) {
+        formData.append(key, taskData[key]);
+      }
+    }
+    formData.append("image", {
+      uri: taskCover.uri,
+      type: "image/jpeg",
+      name: "upload.jpg",
+    });
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.post(
+        `${localhost}/coordinator/upload/insertTask`,
+        formData
+      );
+
+      const result = await response.data;
+      navigation.navigate("TaskMaster", { coordinator: coordinator });
+    } catch (error) {
+      console.error("Error during image upload: ", error.message);
+      return null;
+    } finally {
+      setIsSubmitting(false); // Re-enable the button
     }
   };
 
@@ -78,27 +117,29 @@ const CreateDashboardComponent = ({ coordinator, onTaskCreated }) => {
     updateTaskData("difficultyId", selectedDifficulty);
   }, [selectedDifficulty]);
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return; // Prevents multiple submissions
+  // Handle submit-----------------------------------------
 
-    setIsSubmitting(true); // Disable the button
+  // const handleSubmit = async () => {
+  //   if (isSubmitting) return; // Prevents multiple submissions
 
-    try {
-      await submitTask(taskData, navigation, coordinator, onTaskCreated);
-      // Handle successful submission
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false); // Re-enable the button
-    }
-  };
+  //   setIsSubmitting(true); // Disable the button
 
+  //   try {
+  //     uploadImage();
+  //     // Handle successful submission
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsSubmitting(false); // Re-enable the button
+  //   }
+  // };
+  //----------------------------------------------------------
   return (
     <View style={styles.background}>
       <View style={styles.eventDetailsContainer}>
         <TouchableOpacity onPress={pickImage} style={styles.imagePlaceholder}>
-          {taskData.imageUri ? (
-            <Image source={{ uri: taskData.imageUri }} style={styles.img} />
+          {taskCover ? (
+            <Image source={taskCover} style={styles.img} />
           ) : (
             <Text style={styles.imagePlaceholderText}>Select Image</Text>
           )}
@@ -175,7 +216,7 @@ const CreateDashboardComponent = ({ coordinator, onTaskCreated }) => {
 
         <Button
           title={isSubmitting ? "Creating..." : "Create"}
-          onPress={handleSubmit}
+          onPress={uploadImage}
           disabled={isSubmitting}
         />
       </View>

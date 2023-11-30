@@ -3,22 +3,18 @@ import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native
 import { theme } from "../../assets/style";
 import CardTask from "./CardTask";
 import axios from 'axios';
-import { useNavigation } from "@react-navigation/native";
 import ipAddress from "../database/ipAddress";
-import { useIsFocused } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 const TaskListHeader = ({ route }) => {
     const navigation = useNavigation();
     const user = route?.params?.user || {};
     const [tasks, setTasks] = useState([]);
-    const isFocused = useIsFocused();
     const [selectedDifficulty, setSelectedDifficulty] = useState('All');
     const localhost = ipAddress;
 
     useEffect(() => {
-        if(isFocused){
-            fetchTasksByDifficulty('All');
-        }
+        fetchTasksByDifficulty('All');
     }, []);
 
     const fetchTasksByDifficulty = async (difficultyTitle) => {

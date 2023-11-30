@@ -18,9 +18,10 @@ const ViewOrganization = ({ route }) => {
   const { coordinator } = route.params;
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [logo, setLogo] = useState(
-    require("../../../assets/img/verdiquestlogo-ver2.png")
-  );
+  const imageSource = {
+    uri: `${localhost}/img/organization/${coordinator.OrganizationImage}`,
+  };
+  const [logo, setLogo] = useState(imageSource);
 
   const [editData, setEditData] = useState({
     orgImage: coordinator.OrganizationImage,
@@ -30,35 +31,68 @@ const ViewOrganization = ({ route }) => {
     orgId: coordinator.OrganizationId,
   });
 
+  console.log(logo);
+
   const updateOrganization = (field, text) => {
     setEditData({ ...editData, [field]: text });
   };
 
-  //Image
   const handleEditPress = async () => {
-    // Ask for permission to access the media library
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
+    if (!permissionResult.granted) {
       alert("Request Change Denied!");
       return;
     }
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync();
-    if (pickerResult.canceled === true) {
+    if (pickerResult.canceled) {
       return;
     }
 
-    // If it's not cancelled, use the image uri
     setLogo({ uri: pickerResult.uri });
+  };
+
+  const uploadImage = async () => {
+    let formData = new FormData();
+    formData.append("filePath", "/images/organization");
+    formData.append("organizationId", editData.orgId);
+    formData.append("image", {
+      uri: logo.uri,
+      type: "image/jpeg",
+      name: "upload.jpg",
+    });
+
+    try {
+      const response = await axios.post(
+        `${localhost}/coordinator/upload/imageUpload`,
+        formData
+      );
+
+      const result = await response.data;
+      return result; // Assuming the server returns the path of the uploaded image
+    } catch (error) {
+      console.error("Error during image upload: ", error.message);
+      return null;
+    }
   };
 
   const handleEditOrganization = async () => {
     if (isEditing) {
       if (isSubmitting) return;
       setIsSubmitting(true);
+
       try {
+        // If the logo has been changed, upload it first
+        let imagePath = null;
+        if (logo.uri && logo.uri.startsWith("file:")) {
+          imagePath = await uploadImage();
+          if (!imagePath) {
+            throw new Error("Failed to upload image.");
+          }
+          editData.orgImage = imagePath;
+        }
+
         const response = await axios.post(
           `${localhost}/coordinator/updateOrganization`,
           editData

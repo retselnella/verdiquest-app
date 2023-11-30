@@ -97,6 +97,9 @@ const ViewSubmissionUser = ({ route }) => {
             endTime={formatDate(data.DateFinished)}
             onComplete={() => handleComplete(data)}
             onDecline={() => handleDecline(data)}
+            profileImage={{
+              uri: `${localhost}/img/profilepicture/${data.ProfilePicture}`,
+            }}
           />
         </View>
       </View>

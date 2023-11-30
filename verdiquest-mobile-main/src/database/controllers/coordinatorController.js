@@ -147,43 +147,6 @@ async function loginCoordinator(request, response) {
   }
 }
 
-async function createTask(request, response) {
-  try {
-    const {
-      difficultyId,
-      organizationId,
-      taskName,
-      taskDescription,
-      taskDuration,
-      taskPoints,
-      Status,
-    } = request.body;
-
-    const taskData = {
-      difficultyId,
-      organizationId,
-      taskName,
-      taskDescription,
-      taskDuration,
-      taskPoints,
-      Status,
-    };
-
-    const insertTaskId = await coordinator.insertTask(taskData);
-
-    response.status(200).send({
-      message: "Task registered successfully!",
-      taskId: insertTaskId,
-      success: true,
-    });
-  } catch (error) {
-    console.error(error);
-    response
-      .status(500)
-      .send({ message: "Server error", error: error.message });
-  }
-}
-
 async function getDifficulty(request, response) {
   try {
     const fetchedTable = await coordinator.fetchDifficulty();
@@ -616,11 +579,66 @@ async function updateOrganization(request, response) {
   }
 }
 
+async function getUsersByOrg(request, response) {
+  try {
+    const { orgId } = request.body;
+
+    const organizationData = { orgId };
+    const fetchedTable = await coordinator.getUsersByOrg(organizationData);
+    return response.json({
+      success: true,
+      fetchTable: fetchedTable,
+    });
+  } catch (error) {
+    console.error(error);
+    response
+      .status(500)
+      .send({ message: "Server error", error: error.message });
+  }
+}
+
+async function removeUserFromOrg(request, response) {
+  try {
+    const { userId } = request.body;
+
+    const userData = { userId };
+    const result = await coordinator.removeUserFromOrg(userData);
+    return response.json({
+      success: true,
+      result: result,
+      message: "Member removed successfully!",
+    });
+  } catch (error) {
+    console.error(error);
+    response
+      .status(500)
+      .send({ message: "Server error", error: error.message });
+  }
+}
+
+async function deleteOrganization(request, response) {
+  try {
+    const { orgId } = request.body;
+
+    const orgData = { orgId };
+    const result = await coordinator.deleteOrganization(orgData);
+    return response.json({
+      success: true,
+      result: result,
+      message: "Organization successfully deleted!",
+    });
+  } catch (error) {
+    console.error(error);
+    response
+      .status(500)
+      .send({ message: "Server error", error: error.message });
+  }
+}
+
 module.exports = {
   registerOrganization,
   registerCoordinator,
   loginCoordinator,
-  createTask,
   getDifficulty,
   getTasks,
   deleteTask,
@@ -640,4 +658,7 @@ module.exports = {
   updateCoordinator,
   fetchCoordinator,
   updateOrganization,
+  getUsersByOrg,
+  removeUserFromOrg,
+  deleteOrganization,
 };

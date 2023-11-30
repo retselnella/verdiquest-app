@@ -22,6 +22,9 @@ router.get('/organizationDetails/:organizationId', userController.fetchOrganizat
 router.post('/joinOrg', userController.joinOrganization);
 router.get('/isMember', userController.checkMembership);
 router.get('/tasks/:organizationId', userController.fetchTasksByOrganization);
+router.get('/organization/events/:organizationId', userController.fetchEvents);
+router.get('/event/details/:eventId', userController.fetchEventDetails);
+router.get('/products', userController.fetchProducts);
 
 
 module.exports = router;

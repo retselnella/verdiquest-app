@@ -9,7 +9,6 @@ router.post(
 );
 router.post("/register", coordinatorController.registerCoordinator);
 router.post("/login", coordinatorController.loginCoordinator);
-router.post("/createTask", coordinatorController.createTask);
 router.get("/fetchDifficulty", coordinatorController.getDifficulty);
 router.get("/fetchTasks", coordinatorController.getTasks);
 router.post("/deleteTask", coordinatorController.deleteTask);
@@ -35,5 +34,8 @@ router.post("/fetchTaskTakers", coordinatorController.getUserCountTakers);
 router.post("/updateCoordinator", coordinatorController.updateCoordinator);
 router.post("/fetchCoordinator", coordinatorController.fetchCoordinator);
 router.post("/updateOrganization", coordinatorController.updateOrganization);
+router.post("/getUsersByOrg", coordinatorController.getUsersByOrg);
+router.post("/removeUserFromOrg", coordinatorController.removeUserFromOrg);
+router.post("/deleteOrg", coordinatorController.deleteOrganization);
 
 module.exports = router;

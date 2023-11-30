@@ -19,7 +19,10 @@ const CoordTaskCard = ({
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={img || defaultImage} style={styles.imageStyle} />
+        <Image
+          source={{ uri: img } || defaultImage}
+          style={styles.imageStyle}
+        />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.textStyle}>{title}</Text>

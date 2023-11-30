@@ -23,6 +23,8 @@ import ReportMission from "../screens/coordinator/ReportMission";
 import ReportTaskTakers from "../screens/coordinator/ReportTaskTakers";
 import EditProfileCoordinator from "../screens/coordinator/EditProfileCoordinator";
 import ViewOrganization from "../screens/coordinator/ViewOrganization";
+import Organization from "../screens/coordinator/Organization";
+import MemberView from "../screens/coordinator/MemberView";
 
 const AppCoordinatorStack = createStackNavigator();
 
@@ -191,6 +193,20 @@ const CoordinatorStack = ({ route }) => {
       <AppCoordinatorStack.Screen
         name="EditProfileCoordinator"
         component={EditProfileCoordinator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <AppCoordinatorStack.Screen
+        name="Organization"
+        component={Organization}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <AppCoordinatorStack.Screen
+        name="MemberView"
+        component={MemberView}
         options={{
           headerShown: false,
         }}

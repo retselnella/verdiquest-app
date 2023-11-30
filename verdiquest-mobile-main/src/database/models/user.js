@@ -174,20 +174,43 @@ class User extends BaseModel {
         // Check if the task is already accepted by the user
         const checkQuery = `SELECT * FROM userdailytask WHERE UserId = ? AND TaskId = ?`;
         const [existingTasks] = await this.db.query(checkQuery, [userId, taskId]);
-
+    
         if (existingTasks.length > 0) {
             // Task is already accepted
             return { alreadyAccepted: true };
         }
-
-        // If not accepted, insert the task
-        const insertQuery = `
-            INSERT INTO userdailytask (UserId, TaskId, DateTaken, Status) 
-            VALUES (?, ?, ?, 'Ongoing')
-        `;
-        const [result] = await this.db.query(insertQuery, [userId, taskId, dateTaken]);
-        return { result: result, alreadyAccepted: false };
+    
+        try {
+            // Start a transaction
+            await this.db.query('START TRANSACTION');
+    
+            // If not accepted, insert the task
+            const insertQuery = `
+                INSERT INTO userdailytask (UserId, TaskId, DateTaken, Status) 
+                VALUES (?, ?, ?, 'Ongoing')
+            `;
+            await this.db.query(insertQuery, [userId, taskId, dateTaken]);
+    
+            // Update TaskCount in user table
+            const updateTaskCountQuery = `
+                UPDATE user 
+                SET TaskCount = TaskCount + 1 
+                WHERE UserId = ?
+            `;
+            await this.db.query(updateTaskCountQuery, [userId]);
+    
+            // Commit the transaction
+            await this.db.query('COMMIT');
+    
+            return { result: "Task Accepted", alreadyAccepted: false };
+        } catch (error) {
+            // If an error occurs, rollback the transaction
+            await this.db.query('ROLLBACK');
+            throw error;
+        }
     }
+    
+    
 
     async checkTaskAccepted(userId, taskId) {
         const query = "SELECT * FROM userdailytask WHERE UserId = ? AND TaskId = ? AND Status = 'Ongoing'";
@@ -282,6 +305,36 @@ class User extends BaseModel {
             return tasks;
         } catch (error) {
             throw new Error('Error fetching tasks: ' + error.message);
+        }
+    }
+
+    async fetchEventsByOrganization(organizationId) {
+        const query = 'SELECT * FROM event WHERE OrganizationId = ?';
+        try{
+            const [events] = await this.db.query(query, [organizationId]);
+            return events;
+        } catch(error) {
+            throw new Error('Error fetching events' + error.message);
+        }
+    }
+
+    async fetchEventById(eventId) {
+        const query = 'SELECT * FROM event WHERE EventId = ?';
+        try{
+            const [event] = await this.db.query(query, [eventId]);
+            return event[0];
+        }catch(error){
+            throw new Error('Error fetching event id '+error.message);
+        }
+    }
+
+    async fetchProducts() {
+        try {
+            const query = 'SELECT ProductName, ProductDescription, PointsRequired FROM products';
+            const [products] = await this.db.query(query);
+            return products;
+        } catch (error) {
+            throw new Error('Error fetching products: ' + error.message);
         }
     }
     

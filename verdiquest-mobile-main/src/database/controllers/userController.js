@@ -245,33 +245,24 @@ async function userAllDifficultyTasks(request, response) {
 
 
 async function acceptTask(request, response) {
-  const { userId, taskId } = request.body; 
-
-  // Check if userId and taskId are provided
-  if (!userId || !taskId) {
-      response.status(400).send({ success: false, message: 'UserId and TaskId must be provided' });
-      return;
-  }
-
   try {
-    const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const acceptResult = await user.acceptTask(userId, taskId, currentDate);
-    
-    if (acceptResult.alreadyAccepted) {
-        response.status(409).send({ success: false, message: 'Task is already accepted.' });
-        return;
-    }
+      const userId = request.body.userId;
+      const taskId = request.body.taskId;
+      const dateTaken = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    if (acceptResult.result.affectedRows > 0) {
-        response.json({ success: true, message: 'Task accepted successfully.' });
-    } else {
-        response.status(404).send({ success: false, message: 'Task not found.' });
-    }
+      const result = await user.acceptTask(userId, taskId, dateTaken);
+
+      if (result.alreadyAccepted) {
+          response.status(400).json({ message: "Task already accepted." });
+      } else {
+          response.status(200).json({ message: "Task accepted successfully." });
+      }
   } catch (error) {
-      console.error(`Error accepting task: ${error}`);
-      response.status(500).send({ success: false, message: 'Server error' });
+      console.error("Error accepting task:", error);
+      response.status(500).json({ message: "Internal server error." });
   }
 }
+
 
 async function checkTaskAccepted(request, response) {
   const { userId, taskId } = request.params;
@@ -386,6 +377,38 @@ async function fetchTasksByOrganization(request, response) {
   }
 }
 
+async function fetchEvents(req, res) {
+  try {
+      const organizationId = req.params.organizationId;
+      const events = await user.fetchEventsByOrganization(organizationId);
+      res.json({ success: true, events: events });
+  } catch (error) {
+      console.error('Error fetching events:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
+async function fetchEventDetails(req, res) {
+  try {
+      const eventId = req.params.eventId;
+      const event = await user.fetchEventById(eventId);
+      res.json({ success: true, event: event });
+  } catch (error) {
+      console.error('Error fetching event details:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
+async function fetchProducts(request, response) {
+  try {
+      const products = await user.fetchProducts();
+      response.json(products);
+  } catch (error) {
+      response.status(500).send(error.message);
+  }
+}
+
+
 module.exports = {
   registerUser,
   loginUser,
@@ -406,4 +429,7 @@ module.exports = {
   joinOrganization,
   checkMembership,
   fetchTasksByOrganization,
+  fetchEvents,
+  fetchEventDetails,
+  fetchProducts,
 };

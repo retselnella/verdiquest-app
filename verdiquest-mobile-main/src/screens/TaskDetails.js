@@ -22,55 +22,49 @@ const TaskDetails = ({ route }) => {
         async function fetchDetailsAndCheckAcceptance() {
         const taskId = route.params.taskId;
         const userId = user.UserId;
-        try {
-            const detailsResponse = await axios.get(
-            `${localhost}/user/fetchTaskDetails/${taskId}`
-            );
-            if (detailsResponse.data.success) {
-            setTaskDetails(detailsResponse.data.taskDetails);
-            } else {
-            console.log("Task not found");
-            }
+            try {
+                const detailsResponse = await axios.get(`${localhost}/user/fetchTaskDetails/${taskId}`);
 
-            const acceptanceResponse = await axios.get(
-            `${localhost}/user/checkTaskAccepted/${userId}/${taskId}`
-            );
-            setIsAccepted(acceptanceResponse.data.isAccepted);
-        } catch (error) {
-            console.error(
-            "Error fetching task details or checking acceptance:",
-            error
-            );
-        } finally {
-            setIsLoading(false);
-        }
+                if (detailsResponse.data.success) {
+                    setTaskDetails(detailsResponse.data.taskDetails);
+                } else {
+                    console.log("Task not found");
+                }
+
+                const acceptanceResponse = await axios.get(`${localhost}/user/checkTaskAccepted/${userId}/${taskId}`);
+                setIsAccepted(acceptanceResponse.data.isAccepted);
+            } catch (error) {
+                console.error("Error fetching task details or checking acceptance:",error);
+            } finally {
+                setIsLoading(false);
+            }
         }
         fetchDetailsAndCheckAcceptance();
     }, [route.params.taskId, user.UserId]);
 
     const onPressAccept = async () => {
         if (!user?.UserId || !taskDetails?.TaskId) {
-        console.log("User ID or Task ID is missing");
-        return;
+            console.log("User ID or Task ID is missing");
+            return;
         }
 
         try {
-        const response = await axios.post(`${localhost}/user/acceptTask`, {
-            userId: user.UserId,
-            taskId: taskDetails.TaskId,
-        });
+            const response = await axios.post(`${localhost}/user/acceptTask`, {
+                userId: user.UserId,
+                taskId: taskDetails.TaskId,
+            });
 
-        if (response.data.success) {
-            setIsAccepted(true);
-            setShowModal(true);
-        } else {
-            setErrorMessage("Task is already accepted.");
-            setShowErrorModal(true);
-        }
+            if (response.data.success) {
+                setIsAccepted(true);
+                setShowModal(true);
+            } else {
+                setErrorMessage("Task is already accepted.");
+                setShowErrorModal(true);
+            }
         } catch (error) {
-        console.error("Error accepting task:", error);
-        setErrorMessage("Error accepting task.");
-        setShowErrorModal(true);
+            console.error("Error accepting task:", error);
+            setErrorMessage("Error accepting task.");
+            setShowErrorModal(true);
         }
     };
 

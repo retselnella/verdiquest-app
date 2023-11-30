@@ -12,22 +12,21 @@ const ProductDetails = () => {
         <RewardCard  />
             </View>
         <View style={styles.cardContainer}>
-      <Image source={localImage} style={styles.cardImage} />
-      <Text style={styles.productDescriptionTitle}>Product Description</Text>
-      <View style={styles.descriptionContainer}>
-      
-        <Text style={styles.productDescriptionText}>
-          When you redeem your points for a charity donation, you'll have the option to choose from a list of carefully selected nonprofits organizations that are doing amazing work for the environment, animals, and people in need.
-        </Text>
-      </View>
-      <TouchableOpacity style={styles.earnPointsButton}>
-        <Text style={styles.earnPointsButtonText}>REDEEM</Text>
-      </TouchableOpacity>
+          <Image source={localImage} style={styles.cardImage} />
+          <Text style={styles.productDescriptionTitle}>Product Description</Text>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.productDescriptionText}>
+              When you redeem your points for a charity donation, you'll have the option to choose from a list of carefully selected nonprofits organizations that are doing amazing work for the environment, animals, and people in need.
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.earnPointsButton}>
+            <Text style={styles.earnPointsButtonText}>REDEEM</Text>
+          </TouchableOpacity>
 
-      <Text style={styles.insufficientBalanceText}>
-        Ineligible to redeem, insufficient balance
-      </Text>
-    </View>
+          <Text style={styles.insufficientBalanceText}>
+            Ineligible to redeem, insufficient balance
+          </Text>
+        </View>
     </View>
   );
 };
@@ -35,15 +34,15 @@ const ProductDetails = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5', // This is the background color of the whole screen
+    backgroundColor: '#f5f5f5', 
     alignItems: 'stretch',
     justifyContent: 'center',
   },
   header: {
-    marginBottom: 20, // Space between the RewardCard and the description
+    marginBottom: 20, 
   },
   cardContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#f5f5f5',
     borderRadius: 10,
     padding: 16,
     alignItems: 'center',
@@ -59,16 +58,16 @@ const styles = StyleSheet.create({
     borderRadius: 15,
 },
   cardImage: {
-    width: 100, // Reduced width
-    height: 100, // Reduced height
-    borderRadius: 10, // Adjust for rounded corners
+    width: 100,
+    height: 100,
+    borderRadius: 10, 
   },
   descriptionContainer: {
     backgroundColor: "rgba(123, 144, 75, 0.25);",
     padding: 30,
     width: "100%",
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 20,
   },
   productDescriptionTitle: {
     fontWeight: 'bold',

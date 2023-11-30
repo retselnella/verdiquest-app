@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Dimensions } from "react-native";
 import defaultImage from '../../assets/img/default-image.png';
 import { theme } from "../../assets/style";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import DeleteButton from "../components/DeleteButton";
 import CardTask from "../components/CardTask";
+import CardEvent from "../components/CardEvent";
 import axios from "axios";
 import ipAddress from "../database/ipAddress";
 import { useNavigation } from "@react-navigation/native";
@@ -18,12 +19,13 @@ const OrgHome = ({route}) => {
     const {user} = route.params;
     const navigation = useNavigation();
     const [tasks, setTasks] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [selected, setSelected] = useState('Tasks');
 
-    const handleOrgView = (task) => {
-        // Implement the logic for handling task view. For now, it just navigates to OrgView.
-        navigation.navigate('OrgView', { user: user, task: task });
+    const handleEventPress = (eventId) => {
+        navigation.navigate('OrgView', { eventId: eventId });
     };
-
+    
     const data = [
         {id: '1', title: 'Tasks'},
         {id: '2', title: 'Events'},
@@ -31,10 +33,7 @@ const OrgHome = ({route}) => {
 
     const renderItem = ({item}) => {
         return (
-            <View>
-                <DeleteButton title={item.title}
-                />
-            </View>
+            <DeleteButton title={item.title} onPress={() => setSelected(item.title)}/>
         );
     };
 
@@ -51,8 +50,22 @@ const OrgHome = ({route}) => {
         }
     };
 
+    const fetchOrganizationEvents = async () => {
+        try {
+            const response = await axios.get(`${localhost}/user/organization/events/${user.OrganizationId}`);
+            if (response.data && response.data.success) {
+                setEvents(response.data.events);
+            } else {
+                throw new Error('Failed to fetch events');
+            }
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+
     useEffect(() => {
         fetchOrganizationTasks();
+        fetchOrganizationEvents();
     }, [user.OrganizationId]);
 
     return (
@@ -73,15 +86,26 @@ const OrgHome = ({route}) => {
                         showsHorizontalScrollIndicator={false}
                     />
                 </View>
-                {tasks.map(task => (
-                    <CardTask
-                        key={task.TaskId}
-                        title={task.TaskName}
-                        eventName={task.TaskDifficulty} 
-                        description={task.TaskDescription}
-                        onPress={() => handleOrgView(task)}
-                    />
-                ))}
+                {selected === 'Tasks' ? 
+                    tasks.map(task => (
+                        <CardTask
+                            key={task.TaskId}
+                            title={task.TaskName}
+                            eventDifficulty={task.TaskDifficulty} 
+                            description={task.TaskDescription}
+                            onPress={() => navigation.navigate('TaskDetails', { taskId: task.TaskId })}
+                        />
+                    )) : 
+                    events.map(event => (
+                        <CardEvent
+                            key={event.EventId}
+                            title={event.EventName}
+                            venue={event.EventVenue}
+                            description={event.EventDescription}
+                            onPress={() => handleEventPress(event.EventId)}
+                        />
+                    ))
+                }
             </View>
         </ScrollView>
     );

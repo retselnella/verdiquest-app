@@ -47,7 +47,7 @@ const ProductDetail = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#F7F2FA",
-    flexDirection: "row", // Changed to row
+    flexDirection: "row", 
     borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: {
@@ -58,22 +58,20 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
     margin: 20,
-    alignItems: "center", // Align items in the center vertically
+    alignItems: "center", 
   },
   imageContainer: {
-    // Container for the image
-    marginRight: 10, // Add some space between the image and the text
+    marginRight: 10, 
   },
   imageStyle: {
-    width: 70, // Adjust as needed
+    width: 70, 
     height: 160,
     resizeMode: "cover",
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15,
   },
   textContainer: {
-    // Container for the text
-    flex: 1, // Take the remaining space
+    flex: 1, 
     paddingHorizontal: 10,
     paddingVertical: 20,
   },
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonView: {
-    flexDirection: 'row', // Aligns children in a row
+    flexDirection: 'row', 
     justifyContent: 'flex-start',
     marginLeft: 80,
     gap: 5,
@@ -104,7 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc', // Adjust the color as needed
+    borderBottomColor: '#ccc', 
   },
 });
 

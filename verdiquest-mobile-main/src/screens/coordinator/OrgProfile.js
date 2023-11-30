@@ -11,7 +11,6 @@ import { theme } from "../../../assets/style";
 import Button from "../../components/Button";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../navigation/AuthContext";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import ipAddress from "../../database/ipAddress";

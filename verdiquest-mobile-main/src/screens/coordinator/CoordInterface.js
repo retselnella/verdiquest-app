@@ -60,6 +60,9 @@ const CoordInterface = ({ route }) => {
   const goToOrganizationProfile = () => {
     navigation.navigate("ViewOrganization", { coordinator: coordinator });
   };
+  const goToOrganization = () => {
+    navigation.navigate("Organization", { coordinator: coordinator });
+  };
 
   return (
     <ScrollView
@@ -72,7 +75,9 @@ const CoordInterface = ({ route }) => {
           <View style={{ alignSelf: "flex-end" }}>
             <TouchableOpacity onPress={goToOrganizationProfile}>
               <Image
-                source={require("../../../assets/img/default-image.png")}
+                source={{
+                  uri: `${localhost}/img/organization/${coordinator.OrganizationImage}`,
+                }}
                 style={styles.profileAvatar}
               />
             </TouchableOpacity>
@@ -121,8 +126,13 @@ const CoordInterface = ({ route }) => {
             <Button title="Report" onPress={gotoReports} />
           </View>
         </View>
-        <View style={styles.logoutButtonContainer}>
-          <Button title="Logout" onPress={gotoTasks} />
+        <View style={styles.row}>
+          <View style={styles.leftButton}>
+            <Button title="Organization" onPress={goToOrganization} />
+          </View>
+          <View style={styles.rightButton}>
+            <Button title="Rewards" onPress={gotoReports} />
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -191,9 +201,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   profileAvatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 70 / 2,
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
+    borderColor: "black",
+    borderWidth: 1,
   },
   coordinatorAvatar: {
     width: 90,
