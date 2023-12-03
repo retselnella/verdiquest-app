@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
-const { createAdmin, checkAdminCredentials, createPerson, addCoordinator, addOrganization, addTask, addProduct, getRewards, editReward, deleteReward, getUserCredential, getCoordinatorList, getOrganizationList, getSubscriberList, getEvents, markTaskAsInactive, editTask, softDeleteTask, getCountUser, getCountCoordinator, getCountOrganization, getCountSubscriber, getTotalParticipants, getParticipants, getTaskNameById, getTasks, getParticipantsForTask} = require('../util/db.js');
+const { createAdmin, checkAdminCredentials, createPerson, addCoordinator, addOrganization, addTask, addProduct, getRewards, editReward, deleteReward, getUserCredential, getCoordinatorList, getOrganizationList, getSubscriberList, getEvents, markTaskAsInactive, editTask, softDeleteTask, getCountUser, getCountCoordinator, getCountOrganization, getCountSubscriber, getTotalParticipants, getParticipants, getTaskNameById, getTasks, getParticipantsForTask, getRevenue} = require('../util/db.js');
 
 const router = express.Router();
 
@@ -225,6 +225,20 @@ router.get('/subscriber-count', async (_req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+router.get('/total-revenue', async (_req, res) => {
+    try {
+        const revenue = await getRevenue();
+        if (!Array.isArray(revenue)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(revenue);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+
 
 
 

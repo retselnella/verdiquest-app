@@ -332,6 +332,27 @@ exports.getCountSubscriber = () => {
     });
 };
 
+exports.getRevenue = () =>{
+    return new Promise ((resolve,reject)=>{
+        const query = 
+        `SELECT SubscriptionId AS ID,YEAR(SubscriptionDate) AS Year, 
+        MONTH(SubscriptionDate) AS Month, 
+        SUM(SubscriptionCost) AS Revenue 
+        FROM subscriptiontransaction 
+        GROUP BY 
+        YEAR(SubscriptionDate), 
+        MONTH(SubscriptionDate) 
+        ORDER BY Year, Month`;
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    });
+};
+
 exports.getTotalParticipants =() =>{
     return new Promise ((resolve,reject)=>{
         const query = 
@@ -526,3 +547,5 @@ exports.deleteReward = (productId) => {
             });
         });
     };
+
+   
