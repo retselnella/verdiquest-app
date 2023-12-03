@@ -2,6 +2,8 @@ import Header from './Header.jsx';
 import '../styles/style.scss';
 import {Card, Button} from 'react-bootstrap';
 import Profile from '../Images/profile.png';
+import Profile2 from '../Images/profile2.jpg';
+import Profile3 from '../Images/image3.png';
 import Chart from './Chart.jsx';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
@@ -125,7 +127,7 @@ function Dashboard() {
                     </Card>
 
                     <Card style={{ width: '18rem', backgroundColor: '#7B904B', borderRadius: '30px', opacity: '95%' }}>
-                        <Card.Img variant="top" src={Profile} className="mx-auto d-block" style={{ borderColor: 'white', borderRadius: '50%', borderStyle: 'solid', borderWidth: '3px', height: '90px', width: '90px', marginTop: '10px' }} />
+                        <Card.Img variant="top" src={Profile2} className="mx-auto d-block" style={{ borderColor: 'white', borderRadius: '50%', borderStyle: 'solid', borderWidth: '3px', height: '90px', width: '90px', marginTop: '10px' }} />
                         <Card.Body style={{ backgroundColor: '#7B904B', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', textAlign: 'center' }}>
                             <Card.Title style={{ color: 'white' }}>Coordinator</Card.Title>
                             <Card.Text style={{ justifyContent: 'justify', color: 'white' }}>{coordinatorsCount}</Card.Text>
@@ -136,7 +138,7 @@ function Dashboard() {
                     </Card>
 
                     <Card style={{ width: '18rem', backgroundColor: '#7B904B', borderRadius: '30px', opacity: '95%' }}>
-                        <Card.Img variant="top" src={Profile} className="mx-auto d-block" style={{ borderColor: 'white', borderRadius: '50%', borderStyle: 'solid', borderWidth: '3px', height: '90px', width: '90px', marginTop: '10px' }} />
+                        <Card.Img variant="top" src={Profile3} className="mx-auto d-block" style={{ borderColor: 'white', borderRadius: '50%', borderStyle: 'solid', borderWidth: '3px', height: '90px', width: '90px', marginTop: '10px' }} />
                         <Card.Body style={{ backgroundColor: '#7B904B', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', textAlign: 'center' }}>
                             <Card.Title style={{ color: 'white' }}>Organizations</Card.Title>
                             <Card.Text style={{ justifyContent: 'justify', color: 'white' }}>{organizationsCount}</Card.Text>

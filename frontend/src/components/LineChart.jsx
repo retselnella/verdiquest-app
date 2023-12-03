@@ -5,32 +5,62 @@ import { Chart as chartJS } from 'chart.js/auto';
 function LineChart({chartData}) {
     const options = {
         scales: {
-            x: {  // For x-axis grid lines (Chart.js version 3.x)
+            x: { 
                 grid: {
-                    display: false,            // Set to false to remove grid lines
-                    color: 'rgba(0, 0, 0, 0.1)',  // Color of the grid lines
-                    drawBorder: true,        // Draw border at the edge between the axis and the chart
-                    drawOnChartArea: true,   // Draw grid lines on the chart area
-                    drawTicks: true,         // Draw ticks extending towards the label
-                    // ... other grid line properties
+                    display: false,           
+                    color: 'rgba(0, 0, 0, 0.1)', 
+                    drawBorder: true,      
+                    drawOnChartArea: true,      
+                    drawTicks: true,        
+                },
+                ticks: {
+                    color: 'black', // X-axis labels font color
                 }
             },
-            y: {  // For y-axis grid lines (Chart.js version 3.x)
+            y: {
                 grid: {
                     display: false,
                     color: 'rgba(0, 0, 0, 0.1)',
-                    // ... other grid line properties
+                },
+                ticks: {
+                    color: 'black', // Y-axis labels font color
                 }
             }
         },
         plugins: {
             legend: {
-            display: false,   // Set to false if you want to hide the legend
-            position: 'top',  // Position can be 'top', 'left', 'bottom', or 'right'
-            // ... other legend configuration properties
+                display: false, 
+                position: 'top', 
             },
+            title: {
+                display: true, 
+                text: "Revenue",
+                font: {
+                    size: 18,
+                },
+                color: 'black'
+            },
+            tooltip: {
+                titleFont: { color: 'black' }, // Tooltip title font color
+                bodyFont: { color: 'black' },  // Tooltip body font color
+            }
         },
-        };
+        layout: {
+            padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            },
+            backgroundColor: 'rgba(123, 144, 75, 0.5)', 
+        },
+        animation: {
+            duration: 2000, // Animation duration in milliseconds
+            easing: 'easeOutQuart', // Easing function for the animation
+            // If you need more control over the animation, you can define onProgress or onComplete callbacks here
+        }
+    };
+      
     return <Line data={chartData} options={options}/>;
 }
 
