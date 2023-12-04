@@ -8,7 +8,6 @@ import '../styles/style.scss';
 const Rewards = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showProductModal, setShowProductModal] = useState(false);
-    const [productToEdit, setProductToEdit] = useState(null);
     const [productId, setProductId] = useState('');
     const [productName, setProductName] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -23,7 +22,6 @@ const Rewards = () => {
     const handleCloseModal = () => setShowProductModal(false);
     const handleCloseEditModal = () => setShowEditModal(false);
     const handleEditReward = (reward) => {
-        setProductToEdit(reward);
         setProductId(reward.ProductId);
         setProductName(reward.ProductName);
         setProductDescription(reward.ProductDescription);
@@ -175,7 +173,7 @@ const Rewards = () => {
                                     <Form.Control type="number" placeholder="Enter points required" value={pointsRequired} onChange={handlePointsRequiredChange} />
                                 </Form.Group>
                                 <br />
-                                <Button variant="primary" type="submit">Submit</Button>
+                                <Button variant="primary" type="submit" style={{ color:"white" }}>Submit</Button>
                             </Form>
                         </Modal.Body>
                     </Modal>

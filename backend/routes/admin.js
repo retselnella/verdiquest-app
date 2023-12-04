@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const jsonwebtoken = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
-const { createAdmin, checkAdminCredentials, createPerson, addCoordinator, addOrganization, addTask, addProduct, getRewards, editReward, deleteReward, getUserCredential, getCoordinatorList, getOrganizationList, getSubscriberList, getEvents, markTaskAsInactive, editTask, softDeleteTask, getCountUser, getCountCoordinator, getCountOrganization, getCountSubscriber, getTotalParticipants, getParticipants, getTaskNameById, getTasks, getParticipantsForTask, getRevenue, getAge, getRegUser, getTotalCompletedTask} = require('../util/db.js');
+const { createAdmin, checkAdminCredentials, createPerson, addCoordinator, addOrganization, addTask, addProduct, getRewards, editReward, deleteReward, getUserCredential, getCoordinatorList, getOrganizationList, getSubscriberList, getEvents, markTaskAsInactive, editTask, softDeleteTask, getCountUser, getCountCoordinator, getCountOrganization, getCountSubscriber, getTotalParticipants, getParticipants, getTaskNameById, getTasks, getParticipantsForTask} = require('../util/db.js');
 
 const router = express.Router();
 
@@ -226,55 +226,8 @@ router.get('/subscriber-count', async (_req, res) => {
     }
 });
 
-router.get('/total-revenue', async (_req, res) => {
-    try {
-        const revenue = await getRevenue();
-        if (!Array.isArray(revenue)) {
-            return res.status(200).json([]);
-        }
-        res.status(200).json(revenue);
-    } catch (error) {
-        console.error(error);
-        res.status(200).json([]);
-    }
-});
 
-router.get('/age', async (_req, res) => {
-    try {
-        const age = await getAge();
-        if (!Array.isArray(age)) {
-            return res.status(200).json([]);
-        }
-        res.status(200).json(age);
-    } catch (error) {
-        console.error(error);
-        res.status(200).json([]);
-    }
-});
-router.get('/registered-user', async (_req, res) => {
-    try {
-        const reg_u = await getRegUser();
-        if (!Array.isArray(reg_u)) {
-            return res.status(200).json([]);
-        }
-        res.status(200).json(reg_u);
-    } catch (error) {
-        console.error(error);
-        res.status(200).json([]);
-    }
-});
-router.get('/completed-task', async (_req, res) => {
-    try {
-        const completed = await getTotalCompletedTask();
-        if (!Array.isArray(completed)) {
-            return res.status(200).json([]);
-        }
-        res.status(200).json(completed);
-    } catch (error) {
-        console.error(error);
-        res.status(200).json([]);
-    }
-});
+
 
 // This is for the Add Task functionality
 /**
@@ -377,7 +330,6 @@ router.get('/reward', async (_req, res) => {
     }
 });
 
-
 router.post('/rewards', async (req, res) => {
     const { productId, productName, productDescription, productSize, productQuantity, pointsRequired } = req.body;
 
@@ -394,6 +346,7 @@ router.post('/rewards', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 router.put('/rewards/:id', async (req, res) => {
     const { productName, productDescription, productSize, productQuantity, pointsRequired } = req.body;

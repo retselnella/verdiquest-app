@@ -25,7 +25,7 @@ function Event() {
                         <thead>
                             <tr>
                                 <th>EID</th>
-                                <th>OID</th>
+                                <th>Organization</th>
                                 <th>EventName</th>
                                 <th>EventDescription</th>
                                 <th>EventDate</th>
@@ -37,7 +37,7 @@ function Event() {
                                 events.map(event => (
                                     <tr key={event.EventId}>
                                         <td>{event.EventId}</td>
-                                        <td>{event.CoordinatorId}</td>
+                                        <td>{event.OrganizationName}</td>
                                         <td>{event.EventName}</td>
                                         <td>{event.EventDescription}</td>
                                         <td>{new Date(event.EventDate).toLocaleDateString()}</td>

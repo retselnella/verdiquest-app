@@ -7,7 +7,7 @@ import "../styles/style.scss";
 
 function Coordinator() {
   const [coordinators, setCoordinators] = useState([]);
-  const [organizations, setOrganizations] = useState([]); // Add state for organizations
+  const [organizations, setOrganizations] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,6 +43,16 @@ function Coordinator() {
   };
 
   const handleAddCoordinator = async () => {
+    if (
+      newCoordinator.OrganizationId === "" ||
+      newCoordinator.OrganizationId === "Select Organization" ||
+      newCoordinator.Username === "" ||
+      newCoordinator.Password === ""
+    ) {
+      toast.error("Please fill in all required fields and Organization.");
+      return;
+    }
+  
     try {
       const { PersonId, ...coordinatorWithoutPersonId } = newCoordinator;
       const response = await fetch("http://localhost:3001/admin/addCoordinator", {
@@ -52,11 +62,13 @@ function Coordinator() {
         },
         body: JSON.stringify(newCoordinator),
       });
-
+  
       if (response.ok) {
+  
         handleCloseModal();
         toast.success("Coordinator successfully added!");
         fetchCoordinators();
+
       } else {
         console.error("Failed to add coordinator");
       }
@@ -172,7 +184,7 @@ function Coordinator() {
           <Modal.Title>Add Coordinator</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleAddCoordinator}>
+          <Form>
             <Form.Group controlId="formOrganizationId">
               <Form.Label>Organization</Form.Label>
               <Form.Control
@@ -180,6 +192,7 @@ function Coordinator() {
                 name="OrganizationId"
                 value={newCoordinator.OrganizationId}
                 onChange={handleInputChange}
+                required
               >
                 <option value="">Select Organization</option>
                 {organizations.map((org) => (
@@ -224,6 +237,7 @@ function Coordinator() {
                 name="Username"
                 value={newCoordinator.Username}
                 onChange={handleInputChange}
+                required
               />
             </Form.Group>
 
@@ -235,10 +249,11 @@ function Coordinator() {
                 name="Password"
                 value={newCoordinator.Password}
                 onChange={handleInputChange}
+                required
               />
             </Form.Group>
             <br />
-          <Button variant="primary" type="submit" style={{ color:"white" }}>
+          <Button variant="primary" onClick={handleAddCoordinator} style={{ color:"white" }}>
             Submit
           </Button>
           </Form>
