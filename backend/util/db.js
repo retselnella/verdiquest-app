@@ -424,16 +424,97 @@ exports.getTotalCompletedTask = () =>{
     return new Promise((resolve, reject) => {
         const query =
             `SELECT 
-            DATE_FORMAT(DateFinished, '%Y-%m') AS month, 
-            COUNT(*) AS total_completed_tasks 
+            DATE_FORMAT(DateFinished, '%Y-%m') AS Month, 
+            COUNT(*) AS Completed_Task 
             FROM userdailytask 
-            WHERE status = 'completed' GROUP BY month ORDER BY month`;
+            WHERE status = 'completed' GROUP BY Month ORDER BY Month`;
         connection.query(query,(error,result)=>{
             if(error){
                 return reject(error);
             }
             resolve(result);
         })
+    })
+}
+exports.getSubscriberPerMonth = () =>{
+    return new Promise((resolve, reject) => {
+        const query =`SELECT 
+        DATE_FORMAT(st.SubscriptionDate, '%Y-%m') AS Month, 
+        COUNT(DISTINCT s.SubscriptionId) AS TotalSubscribers 
+        FROM subscription s 
+        INNER JOIN subscriptiontransaction st ON s.SubscriptionId = st.SubscriptionId
+        GROUP BY 
+        MONTH
+        ORDER BY Month`;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+exports.getGender = () =>{
+    return new Promise((resolve, reject) => {
+        const query = `SELECT 
+        CASE 
+            WHEN gender = 'Male' THEN 'Male'
+            WHEN gender = 'Female' THEN 'Female'
+            ELSE 'Others'
+        END AS Gender,
+        COUNT(*) AS Total
+        FROM 
+            person
+        GROUP BY 
+        Gender`;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+exports.getTotalRevenue = () =>{
+    return new Promise((resolve, reject) => {
+        const query = `SELECT 
+        SUM(SubscriptionCost) AS Revenue 
+        FROM subscriptiontransaction 
+        `;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+exports.getSubRevenue = () =>{
+    return new Promise((resolve, reject) => {
+        const query = `SELECT 
+        (SELECT COALESCE(SUM(SubscriptionCost), 0) 
+        FROM subscriptiontransaction 
+        WHERE DATE(SubscriptionDate) = CURDATE()) AS TodayRevenue,
+        (SELECT COALESCE(SUM(SubscriptionCost), 0) 
+        FROM subscriptiontransaction 
+        WHERE YEARWEEK(SubscriptionDate, 1) = YEARWEEK(CURDATE(), 1)) AS WeekRevenue,
+        (SELECT COALESCE(SUM(SubscriptionCost), 0) 
+        FROM subscriptiontransaction 
+        WHERE MONTH(SubscriptionDate) = MONTH(CURDATE()) 
+        AND YEAR(SubscriptionDate) = YEAR(CURDATE())) AS MonthRevenue`;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
     })
 }
 

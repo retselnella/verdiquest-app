@@ -123,6 +123,7 @@ const Header = () => {
                 Subscriber
             </NavDropdown.Item>
           </NavDropdown>
+          <Nav.Link style={{color: 'white'}} href="/StatisticalReports">Statistics</Nav.Link>
         </Nav>
         
         <form class="d-flex ms-auto order-5">
@@ -131,7 +132,7 @@ const Header = () => {
             style={{
               color: 'white',
               borderColor: 'white',
-              marginRight: '10px',
+              marginRight: '20px',
             }}
             onClick={handleLogout}
           >

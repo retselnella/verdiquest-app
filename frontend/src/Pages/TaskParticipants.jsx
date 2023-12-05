@@ -42,7 +42,7 @@ const TaskParticipants = () => {
     }
 
     return (
-        <div>
+        <div className='bodeh'>
             <Header />
             <div className='div3'>
                 <h3 style={{ textAlign: 'center' }}>Participants for {taskName}</h3> 

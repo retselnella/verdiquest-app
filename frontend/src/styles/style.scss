@@ -2,25 +2,32 @@
 body{
     font-family: $fontFamily;
 }
+// UserComponent.scss
+$bodeh-background: url('../Images/bgpic.png'); // Example path to your image
+
 .bodeh {
-  position: relative; /* Essential for the pseudo-element to position relative to this */
-  background-color: #FFFFDD;
+  position: relative;
   z-index: 0;
+  height: 100vh; // Adjust the height as needed
+  width: 100vw; // Adjust the width as needed
+
+  &::before {
+    content: "";
+    background-image: $bodeh-background;
+    opacity: 0.5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px; // Fixed width of the background image
+    height: 500px; // Fixed height of the background image
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    z-index: -1;
+  }
 }
 
-.bodeh::before {
-  content: ""; /* Essential for the pseudo-element to be generated */
-  background-image: url(../Images/bgpic.png);
-  opacity: 0.5; /* Adjust this value as needed, 0 is fully transparent and 1 is fully opaque */
-  z-index: -1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
 .div{
     background-color: #7B904B;
     height: 60px;
@@ -37,7 +44,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    margin: 15px;
+    margin-top: 20px;
 }
 .logoContainer{
     display: flex;

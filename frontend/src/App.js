@@ -12,6 +12,7 @@ import Users from './Pages/Users';
 import Coordinators from './Pages/Coordinators';
 import Organization from './Pages/Organization';
 import Subscriber from './Pages/Subscriber';
+import StatisticalReport from './Pages/StatisticalReport';
 import EventReports from './Pages/EventReport';
 import Participants from './Pages/Participants';
 import TaskReport from './Pages/TaskReport'; // Import the TaskReport component
@@ -39,6 +40,7 @@ const App = () => {
                     <Route path="coordinator" element={<ProtectedRoute><Coordinators /></ProtectedRoute>} />
                     <Route path="organization" element={<ProtectedRoute><Organization /></ProtectedRoute>} />
                     <Route path="subscriber" element={<ProtectedRoute><Subscriber /></ProtectedRoute>} />
+                    <Route path="statisticalReports" element={<ProtectedRoute><StatisticalReport /></ProtectedRoute>} />
                     <Route path="participants/:eventId" element={<ProtectedRoute><Participants /></ProtectedRoute>} />
                 </Routes>
             </Router>

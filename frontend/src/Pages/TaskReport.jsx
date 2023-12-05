@@ -44,7 +44,7 @@ const TaskReport = () => {
     }
 
     return (
-        <div>
+        <div className='bodeh'>
         <Header />
         <div className='div3'>
             <h3 style={{ textAlign: 'center' }}>Task Reports</h3>

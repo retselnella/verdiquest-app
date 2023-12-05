@@ -140,7 +140,7 @@ const Rewards = () => {
     const handlePointsRequiredChange = (e) => setPointsRequired(e.target.value);
 
     return (
-        <div>
+        <div className='bodeh'>
             <div>
                 <Header />
             </div>

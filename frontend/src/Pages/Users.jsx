@@ -42,9 +42,9 @@ function Users() {
     }
 
     return (
-        <div>
+        <div className='bodeh'>
             <Header />
-            <h3>User Management</h3>
+            <h3 style={{ textAlign: 'center', paddingTop:'10px' }}>User Management</h3>
 
             {/* Add the search and filter components */}
             <div className='div3'>
