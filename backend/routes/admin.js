@@ -226,6 +226,57 @@ router.get('/subscriber-count', async (_req, res) => {
     }
 });
 
+router.get('/total-revenue', async (_req, res) => {
+    try {
+        const revenue = await getRevenue();
+        if (!Array.isArray(revenue)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(revenue);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+
+router.get('/age', async (_req, res) => {
+    try {
+        const age = await getAge();
+        if (!Array.isArray(age)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(age);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+router.get('/registered-user', async (_req, res) => {
+    try {
+        const reg_u = await getRegUser();
+        if (!Array.isArray(reg_u)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(reg_u);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+router.get('/completed-task', async (_req, res) => {
+    try {
+        const completed = await getTotalCompletedTask();
+        if (!Array.isArray(completed)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(completed);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+
+
 
 
 

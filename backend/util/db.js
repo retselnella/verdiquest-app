@@ -362,6 +362,81 @@ exports.getTotalParticipants =() =>{
     });
 };
 
+exports.getRevenue = () =>{
+    return new Promise ((resolve,reject)=>{
+        const query = 
+        `SELECT SubscriptionId AS ID,YEAR(SubscriptionDate) AS Year, 
+        MONTH(SubscriptionDate) AS Month, 
+        SUM(SubscriptionCost) AS Revenue 
+        FROM subscriptiontransaction 
+        GROUP BY 
+        YEAR(SubscriptionDate), 
+        MONTH(SubscriptionDate) 
+        ORDER BY Year, Month`;
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    });
+};
+
+exports.getAge = ()=>{
+    return new Promise ((resolve,reject)=>{
+        const query = `SELECT 
+        CASE 
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) < 12 THEN 'below 12'
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) BETWEEN 13 AND 20 THEN '13-20'
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) BETWEEN 21 AND 30 THEN '21-30'
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) BETWEEN 31 AND 50 THEN '31-50'
+            ELSE '51 above'
+        END AS age_range,
+        COUNT(*) AS total_users
+    FROM 
+        person
+    GROUP BY 
+        age_range`;
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    })
+}
+
+exports.getRegUser = ()=>{
+    return new Promise ((resolve,reject)=>{
+        const query = `SELECT DATE_FORMAT(DateRegistered, '%Y-%m') 
+        AS Month, COUNT(*) AS TotalUser FROM user GROUP BY Month ORDER BY Month`;
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    })
+}
+
+exports.getTotalCompletedTask = () =>{
+    return new Promise((resolve, reject) => {
+        const query =
+            `SELECT 
+            DATE_FORMAT(DateFinished, '%Y-%m') AS month, 
+            COUNT(*) AS total_completed_tasks 
+            FROM userdailytask 
+            WHERE status = 'completed' GROUP BY month ORDER BY month`;
+        connection.query(query,(error,result)=>{
+            if(error){
+                return reject(error);
+            }
+            resolve(result);
+        })
+    })
+}
+
 exports.getParticipants = (id) => {
     return new Promise((resolve, reject) => {
         const query = `
