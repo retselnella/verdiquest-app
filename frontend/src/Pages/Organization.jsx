@@ -39,7 +39,12 @@ function Organization() {
   }, []);
 
   const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setOrganizationName("");
+    setOrganizationAddress("");
+    setOrganizationType("");
+  };
 
   const handleOrganizationNameChange = (event) =>
     setOrganizationName(event.target.value);
@@ -48,50 +53,59 @@ function Organization() {
   const handleOrganizationTypeChange = (event) =>
     setOrganizationType(event.target.value);
 
-    const fetchOrganizations = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/admin/organizations");
-        const data = await response.json();
-        setOrganizations(data);
-      } catch (error) {
-        console.error("Failed to fetch organizations:", error);
-      }
-    };
-  
-    useEffect(() => {
-      fetchOrganizations();
-    }, []);
+  const fetchOrganizations = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/admin/organizations");
+      const data = await response.json();
+      setOrganizations(data);
+    } catch (error) {
+      console.error("Failed to fetch organizations:", error);
+    }
+  };
 
-    const handleAddOrganization = async (event) => {
-      event.preventDefault();
-    
-      const formData = {
-        organizationName,
-        organizationAddress,
-        organizationType,
-      };
-    
-      try {
-        const response = await fetch("http://localhost:3001/admin/organization", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });        
-  
-        if (response.ok) {
-          handleCloseModal();
-          fetchOrganizations();
-          toast.success("Organization successfully added!");
-        } else {
-          console.error("Failed to add organization");
-        }
-      } catch (error) {
-        console.error(error);
-      }
+  useEffect(() => {
+    fetchOrganizations();
+  }, []);
+
+  const handleAddOrganization = async (event) => {
+    event.preventDefault();
+
+    if (!organizationName || !organizationAddress || !organizationType) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    if (organizations.some((org) => org.OrganizationName === organizationName)) {
+      toast.error("Organization with the same name already exists.");
+      return;
+    }
+
+    const formData = {
+      organizationName,
+      organizationAddress,
+      organizationType,
     };
 
+    try {
+      const response = await fetch("http://localhost:3001/admin/organization", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        handleCloseModal();
+        fetchOrganizations();
+        toast.success("Organization successfully added!");
+      } else {
+        console.error("Failed to add organization");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -187,7 +201,7 @@ function Organization() {
                 />
               </Form.Group>
               <br />
-              <Button variant="primary" type="submit" style={{ color:"white" }}>
+              <Button variant="primary" type="submit" style={{ color: "white" }}>
                 Submit
               </Button>
             </Form>

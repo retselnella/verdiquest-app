@@ -20,7 +20,15 @@ function Coordinator() {
   });
 
   const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setNewCoordinator({
+      OrganizationId: "",
+      Rank: "0",
+      Username: "",
+      Password: "",
+    });
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -52,23 +60,49 @@ function Coordinator() {
       toast.error("Please fill in all required fields and Organization.");
       return;
     }
-  
+
     try {
+      // Fetch the list of existing coordinators to check for username existence
+      const coordinatorsResponse = await fetch(
+        "http://localhost:3001/admin/coordinators"
+      );
+      const coordinatorsData = await coordinatorsResponse.json();
+
+      if (!coordinatorsResponse.ok) {
+        throw new Error(
+          coordinatorsData.message || "Failed to fetch coordinators"
+        );
+      }
+
+      // Check if the input username already exists in the list of coordinators
+      const isUsernameTaken = coordinatorsData.some(
+        (coordinator) => coordinator.Username === newCoordinator.Username
+      );
+
+      if (isUsernameTaken) {
+        toast.error("Username already exists. Please choose another username.");
+        return;
+      }
+
+      // If the username doesn't exist, add the coordinator
       const { PersonId, ...coordinatorWithoutPersonId } = newCoordinator;
-      const response = await fetch("http://localhost:3001/admin/addCoordinator", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCoordinator),
-      });
-  
+      const response = await fetch(
+        "http://localhost:3001/admin/addCoordinator",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newCoordinator),
+        }
+      );
+
       if (response.ok) {
-  
         handleCloseModal();
         toast.success("Coordinator successfully added!");
-        fetchCoordinators();
 
+        // Fetch the updated list of coordinators
+        fetchCoordinators();
       } else {
         console.error("Failed to add coordinator");
       }
@@ -81,21 +115,29 @@ function Coordinator() {
     const fetchData = async () => {
       try {
         // Fetch organizations
-        const organizationsResponse = await fetch("http://localhost:3001/admin/organizations");
+        const organizationsResponse = await fetch(
+          "http://localhost:3001/admin/organizations"
+        );
         const organizationsData = await organizationsResponse.json();
 
         if (!organizationsResponse.ok) {
-          throw new Error(organizationsData.message || "Failed to fetch organizations");
+          throw new Error(
+            organizationsData.message || "Failed to fetch organizations"
+          );
         }
 
         setOrganizations(organizationsData);
 
         // Fetch coordinators
-        const coordinatorsResponse = await fetch("http://localhost:3001/admin/coordinators");
+        const coordinatorsResponse = await fetch(
+          "http://localhost:3001/admin/coordinators"
+        );
         const coordinatorsData = await coordinatorsResponse.json();
 
         if (!coordinatorsResponse.ok) {
-          throw new Error(coordinatorsData.message || "Failed to fetch coordinators");
+          throw new Error(
+            coordinatorsData.message || "Failed to fetch coordinators"
+          );
         }
 
         setCoordinators(coordinatorsData);
@@ -113,11 +155,20 @@ function Coordinator() {
     try {
       const response = await fetch("http://localhost:3001/admin/coordinators");
       const data = await response.json();
+      data.sort((a, b) => {
+        if (a.Rank === b.Rank) {
+          return a.OrganizationId - b.OrganizationId;
+        }
+      });
       setCoordinators(data);
     } catch (error) {
       console.error("Failed to fetch coordinators:", error);
     }
   };
+
+  useEffect(() => {
+    fetchCoordinators();
+  }, []);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -165,7 +216,10 @@ function Coordinator() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6" style={{ textAlign: "center", color: "white" }}>
+                      <td
+                        colSpan="6"
+                        style={{ textAlign: "center", color: "white" }}
+                      >
                         No coordinators data found.
                       </td>
                     </tr>
@@ -177,88 +231,91 @@ function Coordinator() {
         </div>
       </div>
 
-      <div className="div3"> 
+      <div className="div3">
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Coordinator</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="formOrganizationId">
+                <Form.Label>Organization</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="OrganizationId"
+                  value={newCoordinator.OrganizationId}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Organization</option>
+                  {organizations.map((org) => (
+                    <option key={org.OrganizationId} value={org.OrganizationId}>
+                      {org.OrganizationName}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
 
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Coordinator</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formOrganizationId">
-              <Form.Label>Organization</Form.Label>
-              <Form.Control
-                as="select"
-                name="OrganizationId"
-                value={newCoordinator.OrganizationId}
-                onChange={handleInputChange}
-                required
+              <Form.Group controlId="formRank">
+                <Form.Label>Rank</Form.Label>
+                <div key="inline-radio" className="mb-3">
+                  <Form.Check
+                    inline
+                    label="Regular"
+                    type="radio"
+                    id="radio-regular"
+                    name="Rank"
+                    value={0}
+                    defaultChecked={newCoordinator.Rank == 0}
+                    onChange={handleRankChange}
+                  />
+                  <Form.Check
+                    inline
+                    label="Head"
+                    type="radio"
+                    id="radio-head"
+                    name="Rank"
+                    value={1}
+                    checked={newCoordinator.Rank === 1}
+                    onChange={handleRankChange}
+                  />
+                </div>
+              </Form.Group>
+
+              <Form.Group controlId="formUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Type here"
+                  name="Username"
+                  value={newCoordinator.Username}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Type here"
+                  name="Password"
+                  value={newCoordinator.Password}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Form.Group>
+              <br />
+              <Button
+                variant="primary"
+                onClick={handleAddCoordinator}
+                style={{ color: "white" }}
               >
-                <option value="">Select Organization</option>
-                {organizations.map((org) => (
-                  <option key={org.OrganizationId} value={org.OrganizationId}>
-                    {org.OrganizationName}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group controlId="formRank">
-              <Form.Label>Rank</Form.Label>
-              <div key="inline-radio" className="mb-3">
-                <Form.Check
-                  inline
-                  label="Regular"
-                  type="radio"
-                  id="radio-regular"
-                  name="Rank"
-                  value={0}
-                  checked={newCoordinator.Rank === 0}
-                  onChange={handleRankChange}
-                />
-                <Form.Check
-                  inline
-                  label="Head"
-                  type="radio"
-                  id="radio-head"
-                  name="Rank"
-                  value={1}
-                  checked={newCoordinator.Rank === 1}
-                  onChange={handleRankChange}
-                />
-              </div>
-            </Form.Group>
-
-            <Form.Group controlId="formUsername">
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Type here"
-                name="Username"
-                value={newCoordinator.Username}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Type here"
-                name="Password"
-                value={newCoordinator.Password}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
-            <br />
-          <Button variant="primary" onClick={handleAddCoordinator} style={{ color:"white" }}>
-            Submit
-          </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+                Submit
+              </Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );

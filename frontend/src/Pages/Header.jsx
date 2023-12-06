@@ -127,8 +127,8 @@ const Header = () => {
         
         <form class="d-flex ms-auto order-5">
           <Button
-            variant="primary"
             style={{
+              backgroundColor: '#293420',
               color: 'white',
               borderColor: 'white',
               marginRight: '10px',

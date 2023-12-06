@@ -1,76 +1,80 @@
-const mysql = require('mysql');
-const bcrypt = require('bcrypt');
+const mysql = require("mysql");
+const bcrypt = require("bcrypt");
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'verdiquest_db',
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "verdiquest_db",
 });
 
 exports.checkAdminCredentials = (username, password) => {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM adminstrator WHERE Username = ?';
-        connection.query(query, [username], async (error, results) => {
-            if (error) {
-                return reject(error);
-            }
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM adminstrator WHERE Username = ?";
+    connection.query(query, [username], async (error, results) => {
+      if (error) {
+        return reject(error);
+      }
 
-            const admin = results[0];
-            if (!admin) {
-                return resolve(null);
-            }
+      const admin = results[0];
+      if (!admin) {
+        return resolve(null);
+      }
 
-            if (password) {
-                try {
-                    const isPasswordValid = await bcrypt.compare(password, admin.Password);
-                    return resolve(isPasswordValid ? admin : null);
-                } catch (error) {
-                    return reject(error);
-                }
-            } else {
-                return resolve(admin);
-            }
-        });
+      if (password) {
+        try {
+          const isPasswordValid = await bcrypt.compare(
+            password,
+            admin.Password
+          );
+          return resolve(isPasswordValid ? admin : null);
+        } catch (error) {
+          return reject(error);
+        }
+      } else {
+        return resolve(admin);
+      }
     });
+  });
 };
-
-
 
 exports.createAdmin = (username, password) => {
-    return new Promise(async (resolve, reject) => {
-        const checkQuery = 'SELECT * FROM adminstrator WHERE Username = ?';
-        connection.query(checkQuery, [username], async (error, results) => {
+  return new Promise(async (resolve, reject) => {
+    const checkQuery = "SELECT * FROM adminstrator WHERE Username = ?";
+    connection.query(checkQuery, [username], async (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      if (results.length > 0) {
+        return reject(new Error("Username already exists"));
+      }
+
+      try {
+        const hashedPassword = await bcrypt.hash(password, 14);
+        const organizationId = 1;
+
+        const insertQuery =
+          "INSERT INTO adminstrator (Username, Password, OrganizationId) VALUES (?, ?, ?)";
+        connection.query(
+          insertQuery,
+          [username, hashedPassword, organizationId],
+          (error, results) => {
             if (error) {
-                return reject(error);
+              return reject(error);
             }
-            if (results.length > 0) {
-                return reject(new Error('Username already exists'));
-            }
-
-            try {
-                const hashedPassword = await bcrypt.hash(password, 14);
-                const organizationId = 1;
-
-                const insertQuery = 'INSERT INTO adminstrator (Username, Password, OrganizationId) VALUES (?, ?, ?)';
-                connection.query(insertQuery, [username, hashedPassword, organizationId], (error, results) => {
-                    if (error) {
-                        return reject(error);
-                    }
-                    resolve(results);
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+            resolve(results);
+          }
+        );
+      } catch (error) {
+        reject(error);
+      }
     });
+  });
 };
 
-
-
-exports.getUserCredential = (searchTerm = '', filter = '') => {
-    return new Promise((resolve, reject) => {
-        let query = `
+exports.getUserCredential = (searchTerm = "", filter = "") => {
+  return new Promise((resolve, reject) => {
+    let query = `
             SELECT 
                 u.UserId AS 'ID',
                 u.SubscriptionStatus AS 'Subscription',
@@ -94,25 +98,25 @@ exports.getUserCredential = (searchTerm = '', filter = '') => {
                 CONCAT(p.FirstName, ' ', p.Initial, ' ', p.LastName) LIKE ?
         `;
 
-        let parameters = [`%${searchTerm}%`];
+    let parameters = [`%${searchTerm}%`];
 
-        if (filter) {
-            query += ' AND u.SubscriptionStatus = ?';
-            parameters.push(filter);
-        }
+    if (filter) {
+      query += " AND u.SubscriptionStatus = ?";
+      parameters.push(filter);
+    }
 
-        connection.query(query, parameters, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, parameters, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getCoordinatorList = () => {
-    return new Promise((resolve, reject) => {
-        const query = `
+  return new Promise((resolve, reject) => {
+    const query = `
         SELECT
             c.CoordinatorId,
             c.OrganizationId,
@@ -124,109 +128,153 @@ exports.getCoordinatorList = () => {
         FROM
             coordinator c
         JOIN
-            organization o ON c.OrganizationId = o.OrganizationId`;
+            organization o ON c.OrganizationId = o.OrganizationId
+        ORDER BY
+            c.OrganizationId, c.Rank DESC`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
-}; 
+  });
+};
 
 /**
  * Get the list of organizations
  * @returns {Promise} - A promise that resolves with the list of organizations
  */
 exports.getOrganizationList = () => {
-    return new Promise((resolve, reject) => {
-      const query = 'SELECT OrganizationId, OrganizationName, OrganizationAddress, OrganizationType FROM Organization';
-      
-      connection.query(query, (error, results) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "SELECT OrganizationId, OrganizationName, OrganizationAddress, OrganizationType FROM Organization";
+
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
+  });
+};
+
+//add organization
+exports.addOrganization = (
+  organizationName,
+  organizationAddress,
+  organizationType
+) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "INSERT INTO organization (OrganizationName, OrganizationAddress, OrganizationType) VALUES (?, ?, ?)";
+
+    connection.query(
+      query,
+      [organizationName, organizationAddress, organizationType],
+      (error, results) => {
         if (error) {
           return reject(error);
         }
         resolve(results);
-      });
-    });
-  };
-
-//add organization
-exports.addOrganization = (organizationName, organizationAddress, organizationType) => {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO organization (OrganizationName, OrganizationAddress, OrganizationType) VALUES (?, ?, ?)';
-
-        connection.query(query, [organizationName, organizationAddress, organizationType], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
+      }
+    );
+  });
 };
 
-
-
 exports.getSubscriberList = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM subscription`;
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM subscription`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
+};
+
+exports.getTransactionList = () => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM subscription`;
+
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
+  });
 };
 
 exports.getEvents = () => {
-    return new Promise((resolve, reject) => {
-        const query = `
+  return new Promise((resolve, reject) => {
+    const query = `
             SELECT event.*, organization.OrganizationName 
             FROM event 
             JOIN organization ON event.OrganizationId = organization.OrganizationId
         `;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
-exports.addTask = (taskDifficulty, organizationId, taskName, taskDescription, taskDuration, taskPoints, Status) => {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO dailytask (DifficultyId, OrganizationId, TaskName, TaskDescription, TaskDuration, TaskPoints, Status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+exports.addTask = (
+  taskDifficulty,
+  organizationId,
+  taskName,
+  taskDescription,
+  taskDuration,
+  taskPoints,
+  Status
+) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "INSERT INTO dailytask (DifficultyId, OrganizationId, TaskName, TaskDescription, TaskDuration, TaskPoints, Status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        connection.query(query, [taskDifficulty, organizationId, taskName, taskDescription, taskDuration, taskPoints, Status], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
+    connection.query(
+      query,
+      [
+        taskDifficulty,
+        organizationId,
+        taskName,
+        taskDescription,
+        taskDuration,
+        taskPoints,
+        Status,
+      ],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      }
+    );
+  });
 };
 
 exports.markTaskAsInactive = (id) => {
-    return new Promise((resolve, reject) => {
-        const query = 'UPDATE dailytask SET Status = "Inactive" WHERE TaskId = ?';
+  return new Promise((resolve, reject) => {
+    const query = 'UPDATE dailytask SET Status = "Inactive" WHERE TaskId = ?';
 
-        connection.query(query, [id], (error, results) => {
-            if (error) {                
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, [id], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getTasks = () => {
-    return new Promise((resolve, reject) => {
-        const query = `
+  return new Promise((resolve, reject) => {
+    const query = `
             SELECT 
                 dt.*, 
                 o.OrganizationName 
@@ -236,27 +284,39 @@ exports.getTasks = () => {
                 organization o ON dt.OrganizationId = o.OrganizationId
             WHERE 
                 dt.isDeleted = false`;
-                
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
-exports.editTask = (id, taskName, taskDescription, taskDuration, taskPoints, taskDifficulty) => {
-    return new Promise((resolve, reject) => {
-        const query = 'UPDATE dailytask SET TaskName = ?, TaskDescription = ?, TaskDuration = ?, TaskPoints = ?, DifficultyId = ? WHERE TaskId = ?';
-        
-        connection.query(query, [taskName, taskDescription, taskDuration, taskPoints, taskDifficulty, id], (error, results) => {
-            if (error) {                
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
+exports.editTask = (
+  id,
+  taskName,
+  taskDescription,
+  taskDuration,
+  taskPoints,
+  taskDifficulty
+) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "UPDATE dailytask SET TaskName = ?, TaskDescription = ?, TaskDuration = ?, TaskPoints = ?, DifficultyId = ? WHERE TaskId = ?";
+
+    connection.query(
+      query,
+      [taskName, taskDescription, taskDuration, taskPoints, taskDifficulty, id],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      }
+    );
+  });
 };
 
 // exports.deleteTask = (id) => {
@@ -264,7 +324,7 @@ exports.editTask = (id, taskName, taskDescription, taskDuration, taskPoints, tas
 //         const query = 'DELETE FROM dailytask WHERE TaskId = ?';
 
 //         connection.query(query, [id], (error, results) => {
-//             if (error) {                
+//             if (error) {
 //                 return reject(error);
 //             }
 //             resolve(results);
@@ -273,98 +333,101 @@ exports.editTask = (id, taskName, taskDescription, taskDuration, taskPoints, tas
 // };
 
 exports.softDeleteTask = (id) => {
-    return new Promise((resolve, reject) => {
-        const query = 'UPDATE dailytask SET isDeleted = 1 WHERE TaskId = ?';
+  return new Promise((resolve, reject) => {
+    const query = "UPDATE dailytask SET isDeleted = 1 WHERE TaskId = ?";
 
-        connection.query(query, [id], (error, results) => {
-            if (error) {                
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, [id], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getCountUser = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT COUNT(*) FROM user`;
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) FROM user`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getCountCoordinator = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT COUNT(*) FROM coordinator`;
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) FROM coordinator`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getCountOrganization = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT COUNT(*) FROM organization`;
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) FROM organization`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getCountSubscriber = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT COUNT(*) FROM subscription`;
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) FROM subscription`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
-exports.getTotalParticipants =() =>{
-    return new Promise ((resolve,reject)=>{
-        const query = 
-        `SELECT 
-            e.EventId AS EventId, 
-            e.EventName AS EventName,
-            e.EventDate AS EventDate,
-            e.EventStatus AS Status, 
-            COUNT(p.EventId) AS Count
-            FROM 
-                event e 
-            JOIN 
-                participants p ON e.EventId = p.EventId 
-            GROUP BY 
-                e.EventId, e.EventName`;
+exports.getTotalParticipants = () => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT 
+    e.EventId AS EventId, 
+    o.OrganizationName AS OrganizationName,
+    e.EventName AS EventName,
+    e.EventDate AS EventDate,
+    e.EventStatus AS Status, 
+    COUNT(p.EventId) AS Count
+FROM 
+    event e 
+JOIN 
+    participants p ON e.EventId = p.EventId 
+JOIN
+    organization o ON e.OrganizationId = o.OrganizationId
+GROUP BY 
+    e.EventId, o.OrganizationName, e.EventName;
+`;
 
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
 exports.getParticipants = (id) => {
-    return new Promise((resolve, reject) => {
-        const query = `
+  return new Promise((resolve, reject) => {
+    const query = `
             SELECT 
                 p.ParticipantId,
                 o.OrganizationName,
@@ -382,104 +445,153 @@ exports.getParticipants = (id) => {
                 event e ON p.EventId = e.EventId 
             WHERE 
                 p.EventId = ?`;
-        connection.query(query, [id], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
-        });
+    connection.query(query, [id], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
     });
-}
+  });
+};
 
 exports.getTaskNameById = (taskId) => {
-    return new Promise((resolve, reject) => {
-        const query = `
+  return new Promise((resolve, reject) => {
+    const query = `
             SELECT TaskName 
             FROM dailytask 
             WHERE TaskId = ?`;
 
-        connection.query(query, [taskId], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            if(results.length > 0) {
-                resolve(results[0].TaskName);
-            } else {
-                resolve(null);
-            }
-        });
+    connection.query(query, [taskId], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      if (results.length > 0) {
+        resolve(results[0].TaskName);
+      } else {
+        resolve(null);
+      }
     });
+  });
 };
 
 exports.getParticipantsForTask = (taskId) => {
-    return new Promise((resolve, reject) => {
-        const query = `
-            SELECT u.UserId, u.Email, t.TaskName, ud.Status 
+  return new Promise((resolve, reject) => {
+    const query = `
+            SELECT u.UserId, u.Email, t.TaskName, ud.TaskStatus 
             FROM user u 
             JOIN userdailytask ud ON u.UserId = ud.UserId 
             JOIN dailytask t ON t.TaskId = ud.TaskId 
             WHERE t.TaskId = ?`;
 
-        connection.query(query, [taskId], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+    connection.query(query, [taskId], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
-exports.addProduct = (productId, productName, productDescription, productSize, productQuantity, pointsRequired, organizationId = 1) => {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO products (ProductId, ProductName, ProductDescription, ProductSize, ProductQuantity, PointsRequired, OrganizationId) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        connection.query(query, [productId, productName, productDescription, productSize, productQuantity, pointsRequired, organizationId], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
+exports.addProduct = (
+  productId,
+  productName,
+  productDescription,
+  productSize,
+  productQuantity,
+  pointsRequired,
+  organizationId = 1
+) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "INSERT INTO products (ProductId, ProductName, ProductDescription, ProductSize, ProductQuantity, PointsRequired, OrganizationId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    connection.query(
+      query,
+      [
+        productId,
+        productName,
+        productDescription,
+        productSize,
+        productQuantity,
+        pointsRequired,
+        organizationId,
+      ],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      }
+    );
+  });
 };
-
 
 exports.getRewards = () => {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM products';
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+  return new Promise((resolve, reject) => {
+    const query = `
+        SELECT 
+          products.*, 
+          organization.OrganizationName 
+        FROM 
+          products 
+        LEFT JOIN 
+          organization 
+        ON 
+          products.OrganizationId = organization.OrganizationId`;
+
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
-exports.editReward = (productId, productName, productDescription, productSize, productQuantity, pointsRequired) => {
-    return new Promise((resolve, reject) => {
-        const query = 'UPDATE products SET ProductName = ?, ProductDescription = ?, ProductSize = ?, ProductQuantity = ?, PointsRequired = ? WHERE ProductId = ?';
-        connection.query(query, [productName, productDescription, productSize, productQuantity, pointsRequired, productId], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
+exports.editReward = (
+  productId,
+  productName,
+  productDescription,
+  productSize,
+  productQuantity,
+  pointsRequired
+) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "UPDATE products SET ProductName = ?, ProductDescription = ?, ProductSize = ?, ProductQuantity = ?, PointsRequired = ? WHERE ProductId = ?";
+    connection.query(
+      query,
+      [
+        productName,
+        productDescription,
+        productSize,
+        productQuantity,
+        pointsRequired,
+        productId,
+      ],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
+      }
+    );
+  });
 };
 
 exports.deleteReward = (productId) => {
-    return new Promise((resolve, reject) => {
-        const query = 'DELETE FROM products WHERE ProductId = ?';
-        connection.query(query, [productId], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
+  return new Promise((resolve, reject) => {
+    const query = "DELETE FROM products WHERE ProductId = ?";
+    connection.query(query, [productId], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
+  });
 };
 
-  /**
+/**
  * Create a new person with default values
  * @param {string} UserId - User ID (can be null)
  * @param {string} FirstName - First name (empty string by default)
@@ -494,41 +606,87 @@ exports.deleteReward = (productId) => {
  * @param {string} Province - Province (empty string by default)
  * @returns {Promise} - A promise that resolves with the result of the database query
  */
-  exports.createPerson = (
-    UserId = null,
-    FirstName = '',
-    LastName = '',
-    Initial = '',
-    Birthdate = '',
-    PhoneNumber = '',
-    Gender = '',
-    Street = '',
-    Barangay = '',
-    City = '',
-    Province = ''
-  ) => {
-    return new Promise((resolve, reject) => {
-      const query = 'INSERT INTO Person (UserId, FirstName, LastName, Initial, Birthdate, PhoneNumber, Gender, Street, Barangay, City, Province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-      const values = [UserId, FirstName, LastName, Initial, Birthdate, PhoneNumber, Gender, Street, Barangay, City, Province];
-  
-      connection.query(query, values, (error, results) => {
+exports.createPerson = (
+  UserId = null,
+  FirstName = "",
+  LastName = "",
+  Initial = "",
+  Birthdate = "",
+  PhoneNumber = "",
+  Gender = "",
+  Street = "",
+  Barangay = "",
+  City = "",
+  Province = ""
+) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "INSERT INTO Person (UserId, FirstName, LastName, Initial, Birthdate, PhoneNumber, Gender, Street, Barangay, City, Province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [
+      UserId,
+      FirstName,
+      LastName,
+      Initial,
+      Birthdate,
+      PhoneNumber,
+      Gender,
+      Street,
+      Barangay,
+      City,
+      Province,
+    ];
+
+    connection.query(query, values, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
+  });
+};
+
+exports.addCoordinator = async (
+  OrganizationId,
+  Rank,
+  PersonId,
+  Username,
+  Password
+) => {
+  return new Promise(async (resolve, reject) => {
+    const hashedPassword = await bcrypt.hash(Password, 10);
+
+    const query =
+      "INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)";
+
+    connection.query(
+      query,
+      [OrganizationId, Rank, PersonId, Username, hashedPassword],
+      (error, results) => {
         if (error) {
           return reject(error);
         }
         resolve(results);
-      });
+      }
+    );
+  });
+};
+
+exports.getRevenue = () => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT SubscriptionId AS ID,YEAR(SubscriptionDate) AS Year, 
+            MONTH(SubscriptionDate) AS Month, 
+            SUM(SubscriptionCost) AS Revenue 
+            FROM subscriptiontransaction 
+            GROUP BY 
+            YEAR(SubscriptionDate), 
+            MONTH(SubscriptionDate) 
+            ORDER BY Year, Month`;
+
+    connection.query(query, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
     });
-  };
-
-    exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
-        return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
-
-            connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results);
-            });
-        });
-    };
+  });
+};

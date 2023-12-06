@@ -1,10 +1,10 @@
 @import "./_variables";
-body{
-    font-family: $fontFamily;
+body {
+  font-family: $fontFamily;
 }
 .bodeh {
   position: relative; /* Essential for the pseudo-element to position relative to this */
-  background-color: #FFFFDD;
+  background-color: #ffffdd;
   z-index: 0;
 }
 
@@ -21,124 +21,121 @@ body{
   background-repeat: no-repeat;
   background-position: center center;
 }
-.div{
-    background-color: #7B904B;
-    height: 60px;
-    width:auto;
-    padding-top: 5px;
+.div {
+  background-color: #7b904b;
+  height: 60px;
+  width: auto;
+  padding-top: 5px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+.div3 {
+  padding: 5px;
+}
+.div2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 15px;
+}
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  padding: 2px;
+  .logo {
+    height: 40px;
+    width: 40px;
+    margin-left: 5px;
+  }
+  .active {
+    background-color: white;
+    color: #7b904b;
+  }
+  h2.title {
+    font-size: 31.42px;
+  }
+  h5.title {
+    padding-top: 6px;
+    margin-left: 5px;
+  }
+  a {
+    text-decoration: none !important;
     color: white;
-    display: flex;
-    align-items: center;
-}
-.div3{
+    margin-top: 5px;
+    margin-left: 10px;
     padding: 5px;
-}
-.div2{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    margin: 15px;
-}
-.logoContainer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  }
+  a:hover {
+    background-color: white;
+    color: #7b904b;
+    border-color: black;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  .logout {
+    float: right;
+    margin-left: 750px;
+    height: 35px;
+    border-color: white;
+    background-color: #7b904b;
+    border-radius: 5px;
+    color: white;
+  }
+  .logout:hover {
+    background-color: white;
+    border-color: #7b904b;
+    color: #7b904b;
+  }
+  .dropbtn {
+    background-color: #7b904b;
+    color: white;
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
     position: absolute;
-    padding: 2px;
-    .logo{
-        height: 40px;
-        width: 40px;
-        margin-left: 5px;
-    
-    }
-    .active {
-        background-color: white;
-        color: #7B904B;
-      }
-    h2.title{
-        font-size: 31.42px;
-    }
-    h5.title{
-        padding-top: 6px;
-        margin-left: 5px;
-    }
-    a{
-        text-decoration: none !important;
-        color: white;
-        margin-top: 5px;
-        margin-left: 10px;
-        padding: 5px;
+    background-color: #7b904b;
+    opacity: 90%;
+    width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
 
-    }
-    a:hover{
-        background-color: white;
-        color: #7B904B;
-        border-color: black;
-        padding: 5px;
-        border-radius: 5px;
-    }
-    .logout{
-        float: right;
-        margin-left: 750px;
-        height: 35px;
-        border-color: white;
-        background-color: #7B904B;
-        border-radius: 5px;
-        color: white;
-    }
-    .logout:hover{
-        background-color: white;
-        border-color: #7B904B;
-        color: #7B904B;
-    }   
-    .dropbtn {
-        background-color: #7B904B;
-        color: white;
-        padding: 5px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        margin-left: 10px;
-      }
+  .dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
 
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
+  .dropdown-content a:hover {
+    background-color: white;
+    color: #7b904b;
+  }
 
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #7B904B;
-        opacity: 90%;
-        width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-      }
-      
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
 
-      .dropdown-content a {
-        color: white;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-      }
-
-      .dropdown-content a:hover {
-        background-color: white;
-        color: #7B904B;
-    }
-
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
-
-      .dropdown:hover .dropbtn {
-        background-color: white;
-        color: #7B904B;
-        padding: 5px;
-        border-radius: 5px;
-      }   
+  .dropdown:hover .dropbtn {
+    background-color: white;
+    color: #7b904b;
+    padding: 5px;
+    border-radius: 5px;
+  }
 }
 
 .table-container {
@@ -146,267 +143,310 @@ body{
   overflow-x: auto;
 }
 
-.table-user-container, .table-organization-container, .table-subscriber-container, .table-reward-container {
-  margin: 40px 0 0 0 ; 
+.table-user-container,
+.table-organization-container,
+.table-subscriber-container,
+.table-reward-container {
+  margin: 40px 0 0 0;
 }
 
 .table-responsive {
-  margin: 0 auto; 
-  max-width: calc(100% - 500px); 
+  margin: 0 auto;
+  max-width: calc(100% - 500px);
 }
 
-// This is for the TASKS table 
+// This is for the TASKS table
 .table-task-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
 
   .add-task-btn {
     display: block;
     margin-bottom: 10px;
     color: white;
-    background-color: #3D691B;
-    border-color: #3D691B;
+    background-color: #3d691b;
+    border-color: #3d691b;
   }
-  
-  
-  .add-task-btn:hover{
-    border-color: #7B904B;
+
+  .add-task-btn:hover {
+    border-color: #7b904b;
     color: white;
-    background-color: #7B904B;
+    background-color: #7b904b;
   }
 
   table {
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
-        width: 5%;
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 5%;
     }
 
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 15%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 5%;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
       width: 10%;
     }
-    
-    th:nth-child(5), td:nth-child(5) { 
+
+    th:nth-child(6),
+    td:nth-child(6) {
       width: 7%;
     }
 
-    th:nth-child(6), td:nth-child(6) { 
-      width: 7%;
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 10%;
     }
 
-    th:nth-child(7), td:nth-child(7) {
-        width: 8%; 
+    th:nth-child(8),
+    td:nth-child(8) {
+      width: 8%;
+    }
+
+    th:nth-child(9),
+    td:nth-child(9) {
+      width: 18%;
     }
   }
 }
 // END FOR TASK
 
-// This is for the EVENT table 
+// This is for the EVENT table
 .table-event-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
 
   table {
-  
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
+    th:nth-child(1),
+    td:nth-child(1) {
       width: 2%;
     }
 
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 2%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(3),
+    td:nth-child(3) {
       width: 3%;
     }
 
-    th:nth-child(4), td:nth-child(4) { 
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 15%;
     }
-    th:nth-child(5), td:nth-child(5) { 
+    th:nth-child(5),
+    td:nth-child(5) {
       width: 3%;
     }
 
-    th:nth-child(6), td:nth-child(6) { 
+    th:nth-child(6),
+    td:nth-child(6) {
       width: 3%;
     }
   }
 }
 // END FOR EVENT
 
-// This is for the REWARD table 
+// This is for the REWARD table
 .table-reward-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
 
   table {
-  
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
       align-items: center;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
-        width: 1%;
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 1%;
     }
 
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 5%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 5%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 15%;
     }
-
-    th:nth-child(4), td:nth-child(4) { 
+    th:nth-child(5),
+    td:nth-child(5) {
       width: 1%;
     }
-    th:nth-child(5), td:nth-child(5) { 
-      width: 1%;
-    }
-    th:nth-child(6), td:nth-child(6) { 
+    th:nth-child(6),
+    td:nth-child(6) {
       width: 1%;
     }
 
-    th:nth-child(7), td:nth-child(7) { 
-      width: 1%; 
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 1%;
     }
 
+    th:nth-child(8),
+    td:nth-child(8) {
+      width: 2%;
+    }
   }
   .add-reward-btn {
     display: block;
     margin-bottom: 10px;
     color: white;
-    background-color: #3D691B;
-    border-color: #3D691B;
+    background-color: #3d691b;
+    border-color: #3d691b;
   }
-  
+
   .add-reward-btn:hover {
-    border-color: #7B904B;
+    border-color: #7b904b;
     color: white;
-    background-color: #7B904B;
+    background-color: #7b904b;
   }
 }
 
-
-// This is for the COORDINATOR table 
+// This is for the COORDINATOR table
 .table-coordinator-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
-  
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
+
   .add-coordinator-btn {
     display: block;
     margin-bottom: 10px;
     color: white;
-    background-color: #3D691B;
-    border-color: #3D691B;
-  }
-  
-  .add-coodinator-btn:hover {
-    border-color: #7B904B;
-    color: white;
-    background-color: #7B904B;
+    background-color: #3d691b;
+    border-color: #3d691b;
   }
 
+  .add-coodinator-btn:hover {
+    border-color: #7b904b;
+    color: white;
+    background-color: #7b904b;
+  }
 
   table {
-
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
 
-    th, td {
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
-        width: 0.15%;
-    }
-
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(1),
+    td:nth-child(1) {
       width: 0.15%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 0.15%;
     }
 
-    th:nth-child(4), td:nth-child(4) { 
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 0.15%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 0.25%;
     }
-    
-    th:nth-child(5), td:nth-child(5) { 
+
+    th:nth-child(5),
+    td:nth-child(5) {
       width: 0.25%;
     }
   }
 }
-// END FOR COORDINATOR 
+// END FOR COORDINATOR
 
-// This is for the ORGANIZATION table 
+// This is for the ORGANIZATION table
 .table-organization-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
 
   table {
-  
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
-        width: 3%;
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 3%;
     }
 
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 7%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(3),
+    td:nth-child(3) {
       width: 8%;
     }
 
-    th:nth-child(4), td:nth-child(4) { 
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 7%;
     }
   }
@@ -415,108 +455,115 @@ body{
     display: block;
     margin-bottom: 10px;
     color: white;
-    background-color: #3D691B;
-    border-color: #3D691B;
+    background-color: #3d691b;
+    border-color: #3d691b;
   }
-  
+
   .add-organization-btn:hover {
-    border-color: #7B904B;
+    border-color: #7b904b;
     color: white;
-    background-color: #7B904B;
+    background-color: #7b904b;
   }
 }
 // END FOR ORGANIZATION
 
-// This is for the ORGANIZATION table 
+// This is for the ORGANIZATION table
 .table-subscriber-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
 
   table {
-  
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
-        width: 3%;
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 3%;
     }
 
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 7%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(3),
+    td:nth-child(3) {
       width: 8%;
     }
 
-    th:nth-child(4), td:nth-child(4) { 
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 7%;
     }
   }
 }
 // END FOR SUBSCRIBER
 
-.btn{
-  background-color: #3D691B;
-  border-color: #3D691B;
+.btn {
+  background-color: #3d691b;
+  border-color: #3d691b;
 }
 
-.btn:hover{
-  border-color: #7B904B;
+.btn:hover {
+  border-color: #7b904b;
   color: white;
-  background-color: #7B904B;
+  background-color: #7b904b;
 }
 
 //Participants Table
 .table-participant-responsive {
-  margin: 10px auto 0; 
-  max-width: calc(100% - 500px); 
+  margin: 10px auto 0;
+  max-width: calc(100% - 500px);
 
   table {
-  
-    tr{
-      background-color: #7B904B;
+    tr {
+      background-color: #7b904b;
       opacity: 90%;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       color: white !important;
-      padding: 8px 12px; 
+      padding: 8px 12px;
       align-items: center;
     }
 
-    th:nth-child(1), td:nth-child(1) { 
-        width: 3%;
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 3%;
     }
 
-    th:nth-child(2), td:nth-child(2) { 
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 10%;
     }
 
-    th:nth-child(3), td:nth-child(3) { 
+    th:nth-child(3),
+    td:nth-child(3) {
       width: 15%;
     }
 
-    th:nth-child(4), td:nth-child(4) { 
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 5%;
     }
-    th:nth-child(5), td:nth-child(5) { 
+    th:nth-child(5),
+    td:nth-child(5) {
       width: 1%;
     }
-    th:nth-child(6), td:nth-child(6) { 
+    th:nth-child(6),
+    td:nth-child(6) {
       width: 5%;
     }
   }
 }
-
-
-

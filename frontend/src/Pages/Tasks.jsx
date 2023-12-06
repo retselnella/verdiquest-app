@@ -19,7 +19,7 @@ const Tasks = () => {
   const [taskDifficulty, setTaskDifficulty] = useState("Easy");
   const [taskDescription, setTaskDescription] = useState("");
   const [taskDuration, setTaskDuration] = useState("");
-  const [verdiPoints, setVerdiPoints] = useState("");
+  const [verdiPoints, setVerdiPoints] = useState(150);
   const [tasks, setTasks] = useState([]);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -28,7 +28,6 @@ const Tasks = () => {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => {
     setShowModal(false);
-    // Clear form fields when modal is closed
     clearFormFields();
   };
 
@@ -37,12 +36,26 @@ const Tasks = () => {
     setTaskDifficulty("Easy");
     setTaskDescription("");
     setTaskDuration("");
-    setVerdiPoints("");
+    setVerdiPoints(150);
   };
 
   const handleTaskNameChange = (event) => setTaskName(event.target.value);
-  const handleTaskDifficultyChange = (event) =>
-    setTaskDifficulty(event.target.value);
+  const handleTaskDifficultyChange = (event) => {
+    const newDifficulty = event.target.value;
+    setTaskDifficulty(newDifficulty);
+
+    switch (newDifficulty) {
+      case "Easy":
+        setVerdiPoints(150);
+        break;
+      case "Normal":
+        setVerdiPoints(250);
+        break;
+      case "Hard":
+        setVerdiPoints(500);
+        break;
+    }
+  };
   const handleTaskDescriptionChange = (event) =>
     setTaskDescription(event.target.value);
   const handleTaskDurationChange = (event) =>
@@ -73,6 +86,7 @@ const Tasks = () => {
       if (response.ok) {
         const newTasks = tasks.filter((task) => task.TaskId !== taskId);
         setTasks(newTasks);
+        toast.error("Task Deleted");
       } else {
         console.error("Failed to delete task");
       }
@@ -81,7 +95,6 @@ const Tasks = () => {
     }
   };
 
-  // Handlers for Edit Modal
   const handleEditTask = (task) => {
     setEditTask(task);
     setTaskName(task.TaskName);
@@ -100,10 +113,14 @@ const Tasks = () => {
     setShowEditModal(true);
   };
 
-  // TODO: Implement the handleEditSubmit function
   const handleEditSubmit = async (event) => {
     event.preventDefault();
-
+  
+    if (!taskName || !taskDescription || !taskDuration) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+  
     const formData = {
       taskDifficulty: TASK_DIFFICULTY_MAP[taskDifficulty],
       taskName: taskName,
@@ -111,7 +128,7 @@ const Tasks = () => {
       taskPoints: verdiPoints,
       taskDuration: taskDuration,
     };
-
+  
     try {
       const response = await fetch(
         `http://localhost:3001/admin/task/${editTask.TaskId}`,
@@ -123,16 +140,18 @@ const Tasks = () => {
           body: JSON.stringify(formData),
         }
       );
-
+  
       if (response.ok) {
         setShowEditModal(false);
         toast.success("Task updated successfully");
         fetchTasks();
+        clearFormFields();
       } else {
         toast.error("Failed to update task");
       }
     } catch (error) {
       console.error(error);
+      toast.error("An error occurred while updating the task.");
     }
   };
 
@@ -164,6 +183,7 @@ const Tasks = () => {
     try {
       const response = await fetch("http://localhost:3001/admin/tasks");
       const data = await response.json();
+      data.sort((a, b) => a.TaskId - b.TaskId);
       setTasks(data);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
@@ -176,7 +196,12 @@ const Tasks = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
+    if (!taskName || !taskDescription || !taskDuration) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+  
     const formData = {
       taskDifficulty: TASK_DIFFICULTY_MAP[taskDifficulty],
       organizationId: "1",
@@ -186,7 +211,7 @@ const Tasks = () => {
       taskDuration: taskDuration,
       Status: "Active",
     };
-
+  
     try {
       const response = await fetch("http://localhost:3001/admin/task", {
         method: "POST",
@@ -195,16 +220,18 @@ const Tasks = () => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
         handleCloseModal();
         toast.success("Task successfully added!");
         fetchTasks();
+        clearFormFields();
       } else {
-        console.error("Failed to add task");
+        toast.error("Failed to add task");
       }
     } catch (error) {
       console.error(error);
+      toast.error("An error occurred while adding the task.");
     }
   };
 
@@ -275,6 +302,7 @@ const Tasks = () => {
                     placeholder="Enter VerdiPoints"
                     value={verdiPoints}
                     onChange={handleVerdiPointsChange}
+                    readOnly
                   />
                 </Form.Group>
                 <br />
@@ -292,6 +320,7 @@ const Tasks = () => {
 
         <div className="table-task-container">
           <div className="table-task-responsive">
+            <h3 style={{ textAlign: "center" }}>Tasks View</h3>
             <Button
               variant="primary"
               onClick={handleShowModal}
@@ -434,6 +463,7 @@ const Tasks = () => {
                     placeholder="Enter VerdiPoints"
                     value={verdiPoints}
                     onChange={handleVerdiPointsChange}
+                    readOnly
                   />
                 </Form.Group>
                 <br />
