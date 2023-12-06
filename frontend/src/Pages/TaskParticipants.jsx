@@ -61,7 +61,7 @@ const TaskParticipants = () => {
                                     <tr key={participant.UserId}>
                                         <td>{participant.UserId}</td>
                                         <td>{participant.Email}</td>
-                                        <td>{participant.Status}</td>
+                                        <td>{participant.TaskStatus}</td>
                                     </tr>
                                 ))
                             ) : (
