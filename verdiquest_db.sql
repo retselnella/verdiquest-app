@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `verdiquest`
+-- Database: `verdiquest_db`
 --
 
 -- --------------------------------------------------------
@@ -174,7 +174,7 @@ CREATE TABLE `products` (
   `ProductId` int(11) NOT NULL,
   `OrganizationId` int(11) NOT NULL,
   `ProductName` varchar(50) NOT NULL,
-  `ProductImage` varchar(100) NOT NULL,
+  `ProductImage` varchar(100) DEFAULT NULL,
   `ProductDescription` varchar(100) NOT NULL,
   `ProductSize` varchar(10) NOT NULL,
   `ProductQuantity` int(4) NOT NULL,
@@ -244,11 +244,11 @@ CREATE TABLE `user` (
   `UserId` int(11) NOT NULL,
   `OrganizationId` int(11) DEFAULT NULL,
   `SubscriptionStatus` varchar(10) NOT NULL,
-  `UserDescription` varchar(255) NOT NULL,
   `VerdiPoints` int(10) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Password` varchar(255) NOT NULL,
   `ProfilePicture` varchar(255) NOT NULL,
+  `UserDescription` varchar(255) NOT NULL,
   `TaskCount` int(11) NOT NULL,
   `DateRegistered` date NOT NULL,
   `LastActive` datetime NOT NULL
