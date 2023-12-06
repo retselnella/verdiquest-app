@@ -1,6 +1,7 @@
 @import "./_variables";
 body{
     font-family: $fontFamily;
+    background-color:#fafacb;
 }
 // UserComponent.scss
 $bodeh-background: url('../Images/bgpic.png'); // Example path to your image
@@ -26,6 +27,16 @@ $bodeh-background: url('../Images/bgpic.png'); // Example path to your image
     background-size: contain;
     z-index: -1;
   }
+}
+.container{
+  background-color: 'white';
+}
+
+.totalUser{
+  border:'1px solid black'; 
+  width:'500px';
+  height: '300px';
+  margin: '10px';
 }
 
 .div{

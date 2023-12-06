@@ -35,8 +35,6 @@ exports.checkAdminCredentials = (username, password) => {
     });
 };
 
-
-
 exports.createAdmin = (username, password) => {
     return new Promise(async (resolve, reject) => {
         const checkQuery = 'SELECT * FROM adminstrator WHERE Username = ?';
@@ -65,8 +63,6 @@ exports.createAdmin = (username, password) => {
         });
     });
 };
-
-
 
 exports.getUserCredential = (searchTerm = '', filter = '') => {
     return new Promise((resolve, reject) => {
@@ -166,8 +162,6 @@ exports.addOrganization = (organizationName, organizationAddress, organizationTy
     });
 };
 
-
-
 exports.getSubscriberList = () => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM subscription`;
@@ -258,19 +252,6 @@ exports.editTask = (id, taskName, taskDescription, taskDuration, taskPoints, tas
         });
     });
 };
-
-// exports.deleteTask = (id) => {
-//     return new Promise((resolve, reject) => {
-//         const query = 'DELETE FROM dailytask WHERE TaskId = ?';
-
-//         connection.query(query, [id], (error, results) => {
-//             if (error) {                
-//                 return reject(error);
-//             }
-//             resolve(results);
-//         });
-//     });
-// };
 
 exports.softDeleteTask = (id) => {
     return new Promise((resolve, reject) => {
@@ -436,6 +417,7 @@ exports.getTotalCompletedTask = () =>{
         })
     })
 }
+
 exports.getSubscriberPerMonth = () =>{
     return new Promise((resolve, reject) => {
         const query =`SELECT 
@@ -482,7 +464,7 @@ exports.getGender = () =>{
 exports.getTotalRevenue = () =>{
     return new Promise((resolve, reject) => {
         const query = `SELECT 
-        SUM(SubscriptionCost) AS Revenue 
+        COALESCE(SUM(SubscriptionCost), 0) AS Revenue 
         FROM subscriptiontransaction 
         `;
         connection.query(query,(error, result) => {
@@ -676,15 +658,15 @@ exports.deleteReward = (productId) => {
     });
   };
 
-    exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
-        return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
+exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
 
-            connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results);
-            });
+        connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
         });
-    };
+    });
+};

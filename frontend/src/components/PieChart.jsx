@@ -18,6 +18,7 @@ function PieChart({chartData}) {
             text: "User Ages",
             font: {
                 size: 18,
+                family: 'Andada Pro, serif',
             },
             color: 'black'
         },

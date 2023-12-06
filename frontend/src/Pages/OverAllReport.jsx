@@ -63,7 +63,7 @@ const OverAllReport = () => {
     }, []);
 
     return (
-        <div style={{width: '500px', overflowX: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',}}>
+        <div style={{width: '500px', overflowX: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',padding: '10px'}}>
             <Barchart chartData={userData} />
         </div>
     );

@@ -37,6 +37,7 @@ function LineChart({chartData}) {
                 text: "Revenue",
                 font: {
                     size: 18,
+                    family: 'Andada Pro, serif',
                 },
                 color: 'black'
             },

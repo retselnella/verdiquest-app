@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../styles/custom.scss';
+import '../styles/style.scss';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -53,11 +54,11 @@ const Login = () => {
     };
 
     return (
-        <main className="d-flex align-items-center min-vh-100">
+        <main className="d-flex align-items-center min-vh-100" >
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-md-4">
-                        <form className="border p-4 rounded" onSubmit={handleSubmit}>
+                        <form className="border p-4 rounded" style={{backgroundColor:'white',}} onSubmit={handleSubmit}>
                             <h2 className="mb-3 text-center">Admin Login</h2>
                             {error && <p className="text-danger text-center">{error}</p>}
                             <div className="mb-3">

@@ -18,6 +18,7 @@ const PieChartGender = ({chartData}) => {
                 text: "Gender",
                 font: {
                     size: 18,
+                    family: 'Andada Pro, serif',
                 },
                 color: 'black'
             },

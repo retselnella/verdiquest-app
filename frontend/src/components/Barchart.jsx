@@ -24,6 +24,7 @@ function Barchart({chartData}) {
           text: "Overall Report",
           font: {
               size: 18,
+              family: 'Andada Pro, serif',
           },
           color: 'black'
       },
