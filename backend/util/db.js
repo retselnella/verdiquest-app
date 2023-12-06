@@ -206,8 +206,7 @@ exports.getSubscriberList = () => {
             resolve(results);
         });
     });
-  });
-};
+  };
 
 exports.getEvents = () => {
   return new Promise((resolve, reject) => {
@@ -833,7 +832,8 @@ exports.getRevenue = () => {
       }
       resolve(results);
     });
-  };
+  });
+}
 
 exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
     return new Promise((resolve, reject) => {
