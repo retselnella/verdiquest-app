@@ -43,7 +43,7 @@ const Reports = () => {
   }
 
   return (
-    <div>
+    <div className='bodeh'>
       <Header />
       <div className="div3">
         <h3 style={{ textAlign: "center" }}>Event Reports</h3>

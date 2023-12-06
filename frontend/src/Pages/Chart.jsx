@@ -8,16 +8,16 @@ const Chart = () => {
         datasets: [{
             label: "Profits",
             data: [],
-            tension: 0.43,
+            tension: 0.3,
             fill: true,
-            backgroundColor: '#7B904B',
+            backgroundColor: 'rgba(123, 144, 75, 0.8)', // Added opacity to the original color
             padding: 20,
             pointBorderColor: 'transparent',
-            pointBackgroundColor: '#fff',
+            pointBackgroundColor: 'rgba(11, 32, 0, 0.5)', // Added opacity to the original color
             pointBorderWidth: 0,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)', // This already has opacity set to 1 (fully opaque)
+            pointHoverBorderColor: 'rgba(220, 220, 220, 1)', // This already has opacity set to 1 (fully opaque)
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
@@ -48,9 +48,7 @@ const Chart = () => {
 
     return (
         <div style={{width: '700px', overflowX: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px'}}>
-            <div style={{width: '1000px', height: '300px'}}> {/* Adjust this width to be larger than the outer container for horizontal scrolling */}
-                <LineChart chartData={userData} />
-            </div>
+            <LineChart chartData={userData} />
         </div>
     );
 }

@@ -12,6 +12,10 @@ function Dashboard() {
     const [usersCount, setUserCount] = useState(0);
     const [coordinatorsCount, setCoordinatorCount] = useState(0);
     const [organizationsCount, setOrganizationCount] = useState(0);
+    const [revenue, setRevenue] = useState(0);
+    const [todayRevenue, setTodayRevenue] = useState(0);
+    const [weekRevenue, setWeekRevenue] = useState(0);
+    const [monthRevenue, setMonthRevenue] = useState(0);
     const [subscribersCount, setSubscriberCount] = useState(0);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +89,31 @@ function Dashboard() {
             if (!response.ok) throw new Error(data.message);
             setSubscriberCount(data.count);
         };
+        const fetchRevenue = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/admin/revenue');
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message);
+                setRevenue(data.revenue); // Ensure this matches the key from your response
+            } catch (error) {
+                console.error('Error fetching revenue:', error);
+                setError(error.message || 'Could not fetch revenue');
+            }
+        };
+        const fetchSubRevenue = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/admin/sub-revenue');
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message);
+                setTodayRevenue(data.TodayRevenue);
+                setWeekRevenue(data.WeekRevenue);
+                setMonthRevenue(data.MonthRevenue);
+            } catch (error) {
+                console.error('Error fetching revenue:', error);
+                setError(error.message || 'Could not fetch revenue');
+            }
+        };
+        
 
         const fetchData = async () => {
             try {
@@ -93,6 +122,8 @@ function Dashboard() {
                     fetchCoordinators(),
                     fetchOrganizations(),
                     fetchSubscribers(),
+                    fetchRevenue(),
+                    fetchSubRevenue()
                 ]);
             } catch (err) {
                 setError(err.message || 'Something went wrong!');
@@ -112,8 +143,8 @@ function Dashboard() {
     }
     return (
         <div className='bodeh'>
+            <Header />
             <div>  
-                <Header />
                 <div className='div2'>
                     <Card style={{ width: '18rem', backgroundColor: '#7B904B', borderRadius: '30px', opacity: '95%' }}>
                         <Card.Img variant="top" src={Profile} className="mx-auto d-block" style={{ borderColor: 'white', borderRadius: '50%', borderStyle: 'solid', borderWidth: '3px', height: '90px', width: '90px', marginTop: '10px' }} />
@@ -162,37 +193,32 @@ function Dashboard() {
             </div>
             
             <div className='div2'>
-                <div style={{height:'300px',width:'300px',backgroundColor:'#7B904B', borderRadius:'20px', padding:'5px', color:'white'}}>
+                <div style={{height:'250px',width:'300px',backgroundColor:'#7B904B', borderRadius:'20px', padding:'5px', color:'white'}}>
                     <center><h3>Total Revenue</h3></center>
-                    <center>
-                        <div style={{width:'auto', height:'50px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                            <center><h6>Data</h6></center>
-                        </div>
-                    </center>
-                    <div style={{padding:'5px'}}>
+                    <div style={{padding:'10px'}}>
                         <center><h5>Amount</h5></center>
                         <center>
                             <div style={{width:'auto', height:'50px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                                <center><h6>Data</h6></center>
+                                <center><h5>{revenue}</h5></center>
                             </div>
                         </center>
                     </div>
                     <div style={{display:'flex',alignItems:'center',justifyContent:'space-evenly',float:'bottom'}}>
                         <div>
                             <div style={{height:'60px', display:'flex',alignItems:'center',justifyContent:'center'}}>
-                                <center><h6>Data</h6></center>
+                                <center><h6>{todayRevenue}</h6></center>
                             </div>
                             <h6>Today</h6>
                         </div>
                         <div>
                             <div style={{height:'60px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                                <center><h6>Data</h6></center>
+                                <center><h6>{weekRevenue}</h6></center>
                             </div>
                             <h6>This Week</h6>
                         </div>
                         <div>
                             <div style={{height:'60px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                                <center><h6>Data</h6></center>
+                                <center><h6>{monthRevenue}</h6></center>
                             </div>
                             <h6>This Month</h6>
                         </div>

@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const jsonwebtoken = require("jsonwebtoken");
 var { expressjwt: jwt } = require("express-jwt");
+
 const {
   createAdmin,
   checkAdminCredentials,
@@ -32,6 +33,14 @@ const {
   getTaskNameById,
   getTasks,
   getParticipantsForTask,
+  getRevenue,
+  getAge,
+  getRegUser,
+  getTotalCompletedTask,
+  getSubscriberPerMonth,
+  getGender,
+  getTotalRevenue,
+  getSubRevenue
 } = require("../util/db.js");
 
 const router = express.Router();
@@ -297,17 +306,99 @@ router.get("/subscriber-count", async (_req, res) => {
   }
 });
 
-router.get("/total-revenue", async (_req, res) => {
-  try {
-    const revenue = await getRevenue();
-    if (!Array.isArray(revenue)) {
-      return res.status(200).json([]);
+router.get('/total-revenue', async (_req, res) => {
+    try {
+        const revenue = await getRevenue();
+        if (!Array.isArray(revenue)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(revenue);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
     }
-    res.status(200).json(revenue);
-  } catch (error) {
-    console.error(error);
-    res.status(200).json([]);
-  }
+});
+
+router.get('/age', async (_req, res) => {
+    try {
+        const age = await getAge();
+        if (!Array.isArray(age)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(age);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+router.get('/registered-user', async (_req, res) => {
+    try {
+        const reg_u = await getRegUser();
+        if (!Array.isArray(reg_u)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(reg_u);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+router.get('/completed-task', async (_req, res) => {
+    try {
+        const completed = await getTotalCompletedTask();
+        if (!Array.isArray(completed)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(completed);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+router.get('/subs-per-month', async (_req, res) => {
+    try {
+        const completed = await getSubscriberPerMonth();
+        if (!Array.isArray(completed)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(completed);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+router.get('/gender', async (_req, res) => {
+    try {
+        const completed = await getGender();
+        if (!Array.isArray(completed)) {
+            return res.status(200).json([]);
+        }
+        res.status(200).json(completed);
+    } catch (error) {
+        console.error(error);
+        res.status(200).json([]);
+    }
+});
+
+router.get('/revenue', async (_req, res) => {
+    try {
+        const countrevenue = await getTotalRevenue();
+        const revenue = countrevenue[0].Revenue; // Access using the alias 'Revenue'
+        res.status(200).json({ revenue });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+router.get('/sub-revenue', async (_req, res) => {
+    try {
+        const revenueData = await getSubRevenue();
+        const revenue = revenueData[0]; // This should contain TodayRevenue, WeekRevenue, and MonthRevenue
+        res.status(200).json(revenue);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 // This is for the Add Task functionality

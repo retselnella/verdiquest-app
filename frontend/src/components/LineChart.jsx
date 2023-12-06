@@ -37,6 +37,7 @@ function LineChart({chartData}) {
                 text: "Revenue",
                 font: {
                     size: 18,
+                    family: 'Andada Pro, serif',
                 },
                 color: 'black'
             },
@@ -61,7 +62,9 @@ function LineChart({chartData}) {
         }
     };
       
-    return <Line data={chartData} options={options}/>;
+    return <div style={{ width: '800px', height: '350px', paddingLeft:'50px' }}>
+                <Line data={chartData} options={options}/>;
+            </div>
 }
 
 export default LineChart

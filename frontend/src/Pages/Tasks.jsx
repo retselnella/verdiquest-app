@@ -236,10 +236,10 @@ const Tasks = () => {
   };
 
   return (
-    <div>
+    <div className="bodeh">
       <div>
         <Header />
-      </div>
+      
       <div className="div3">
         <div className="div3">
           <Modal show={showModal} onHide={handleCloseModal}>
@@ -499,6 +499,7 @@ const Tasks = () => {
             </Modal.Footer>
           </Modal>
         </div>
+      </div>
       </div>
     </div>
   );

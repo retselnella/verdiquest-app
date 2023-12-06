@@ -16,7 +16,7 @@ function Event() {
     }, []); 
 
     return (
-        <div>
+        <div className='bodeh'>
             <Header />
             <div className="table-organization-container">
                 <h3 style={{ textAlign: 'center' }}>Event View</h3>

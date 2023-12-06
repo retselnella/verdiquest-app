@@ -38,10 +38,10 @@ function Subscriber() {
   }
 
   return (
-    <div>
-      <div>
-        <Header />
-        <div className="table-subscriber-container">
+    <div className='bodeh'>
+        <div>
+          <Header />
+          <div className="table-subscriber-container">
           <h3 style={{ textAlign: 'center' }}>Subscription View</h3>
 
           <div className="table-subscriber-responsive">

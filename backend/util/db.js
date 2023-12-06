@@ -195,15 +195,16 @@ exports.getSubscriberList = () => {
   });
 };
 
-exports.getTransactionList = () => {
-  return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM subscription`;
+exports.getSubscriberList = () => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM subscription`;
 
-    connection.query(query, (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
     });
   });
 };
@@ -319,19 +320,6 @@ exports.editTask = (
   });
 };
 
-// exports.deleteTask = (id) => {
-//     return new Promise((resolve, reject) => {
-//         const query = 'DELETE FROM dailytask WHERE TaskId = ?';
-
-//         connection.query(query, [id], (error, results) => {
-//             if (error) {
-//                 return reject(error);
-//             }
-//             resolve(results);
-//         });
-//     });
-// };
-
 exports.softDeleteTask = (id) => {
   return new Promise((resolve, reject) => {
     const query = "UPDATE dailytask SET isDeleted = 1 WHERE TaskId = ?";
@@ -424,6 +412,163 @@ GROUP BY
     });
   });
 };
+
+exports.getRevenue = () =>{
+    return new Promise ((resolve,reject)=>{
+        const query = 
+        `SELECT SubscriptionId AS ID,YEAR(SubscriptionDate) AS Year, 
+        MONTH(SubscriptionDate) AS Month, 
+        SUM(SubscriptionCost) AS Revenue 
+        FROM subscriptiontransaction 
+        GROUP BY 
+        YEAR(SubscriptionDate), 
+        MONTH(SubscriptionDate) 
+        ORDER BY Year, Month`;
+
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    });
+};
+
+exports.getAge = ()=>{
+    return new Promise ((resolve,reject)=>{
+        const query = `SELECT 
+        CASE 
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) < 12 THEN 'below 12'
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) BETWEEN 13 AND 20 THEN '13-20'
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) BETWEEN 21 AND 30 THEN '21-30'
+            WHEN TIMESTAMPDIFF(YEAR, Birthdate, CURDATE()) BETWEEN 31 AND 50 THEN '31-50'
+            ELSE '51 above'
+        END AS age_range,
+        COUNT(*) AS total_users
+    FROM 
+        person
+    GROUP BY 
+        age_range`;
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    })
+}
+
+exports.getRegUser = ()=>{
+    return new Promise ((resolve,reject)=>{
+        const query = `SELECT DATE_FORMAT(DateRegistered, '%Y-%m') 
+        AS Month, COUNT(*) AS TotalUser FROM user GROUP BY Month ORDER BY Month`;
+        connection.query(query, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    })
+}
+
+exports.getTotalCompletedTask = () =>{
+    return new Promise((resolve, reject) => {
+        const query =
+            `SELECT 
+            DATE_FORMAT(DateFinished, '%Y-%m') AS Month, 
+            COUNT(*) AS Completed_Task 
+            FROM userdailytask 
+            WHERE status = 'completed' GROUP BY Month ORDER BY Month`;
+        connection.query(query,(error,result)=>{
+            if(error){
+                return reject(error);
+            }
+            resolve(result);
+        })
+    })
+}
+
+exports.getSubscriberPerMonth = () =>{
+    return new Promise((resolve, reject) => {
+        const query =`SELECT 
+        DATE_FORMAT(st.SubscriptionDate, '%Y-%m') AS Month, 
+        COUNT(DISTINCT s.SubscriptionId) AS TotalSubscribers 
+        FROM subscription s 
+        INNER JOIN subscriptiontransaction st ON s.SubscriptionId = st.SubscriptionId
+        GROUP BY 
+        MONTH
+        ORDER BY Month`;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+exports.getGender = () =>{
+    return new Promise((resolve, reject) => {
+        const query = `SELECT 
+        CASE 
+            WHEN gender = 'Male' THEN 'Male'
+            WHEN gender = 'Female' THEN 'Female'
+            ELSE 'Others'
+        END AS Gender,
+        COUNT(*) AS Total
+        FROM 
+            person
+        GROUP BY 
+        Gender`;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+exports.getTotalRevenue = () =>{
+    return new Promise((resolve, reject) => {
+        const query = `SELECT 
+        COALESCE(SUM(SubscriptionCost), 0) AS Revenue 
+        FROM subscriptiontransaction 
+        `;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
+exports.getSubRevenue = () =>{
+    return new Promise((resolve, reject) => {
+        const query = `SELECT 
+        (SELECT COALESCE(SUM(SubscriptionCost), 0) 
+        FROM subscriptiontransaction 
+        WHERE DATE(SubscriptionDate) = CURDATE()) AS TodayRevenue,
+        (SELECT COALESCE(SUM(SubscriptionCost), 0) 
+        FROM subscriptiontransaction 
+        WHERE YEARWEEK(SubscriptionDate, 1) = YEARWEEK(CURDATE(), 1)) AS WeekRevenue,
+        (SELECT COALESCE(SUM(SubscriptionCost), 0) 
+        FROM subscriptiontransaction 
+        WHERE MONTH(SubscriptionDate) = MONTH(CURDATE()) 
+        AND YEAR(SubscriptionDate) = YEAR(CURDATE())) AS MonthRevenue`;
+        connection.query(query,(error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
 
 exports.getParticipants = (id) => {
   return new Promise((resolve, reject) => {
@@ -688,5 +833,17 @@ exports.getRevenue = () => {
       }
       resolve(results);
     });
-  });
+  };
+
+exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
+
+        connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    });
 };

@@ -116,7 +116,7 @@ function Organization() {
   }
 
   return (
-    <div>
+    <div className="bodeh">
       <div>
         <Header />
       </div>

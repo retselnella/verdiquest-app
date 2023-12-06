@@ -179,7 +179,7 @@ function Coordinator() {
   }
 
   return (
-    <div>
+    <div className="bodeh">
       <div>
         <Header />
         <div className="table-subscriber-container">
