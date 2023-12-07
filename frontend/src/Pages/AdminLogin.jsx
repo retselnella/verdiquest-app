@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../styles/custom.scss';
 import '../styles/style.scss';
+import  logo from '../Images/logo.png'
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -79,6 +80,13 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            <img src={logo} alt="Logo" style={{ 
+                    position: 'absolute', 
+                    right: '10px', 
+                    bottom: '10px', 
+                    width: '100px', // Adjust size as needed
+                    height: 'auto' 
+                }} />
         </main>
     );
 };

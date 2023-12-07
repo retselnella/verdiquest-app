@@ -477,7 +477,7 @@ exports.getTotalCompletedTask = () =>{
             DATE_FORMAT(DateFinished, '%Y-%m') AS Month, 
             COUNT(*) AS Completed_Task 
             FROM userdailytask 
-            WHERE status = 'completed' GROUP BY Month ORDER BY Month`;
+            WHERE TaskStatus = 'completed' GROUP BY Month ORDER BY Month`;
         connection.query(query,(error,result)=>{
             if(error){
                 return reject(error);
@@ -834,16 +834,3 @@ exports.getRevenue = () => {
     });
   });
 }
-
-exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
-
-        connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
-};

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import  logo from '../Images/logo.png'
 const AdminRegistration = () => {
     const [formData, setFormData] = useState({
         username: '',
@@ -61,7 +61,7 @@ const AdminRegistration = () => {
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-md-4">
-                        <form className="border p-4 rounded" onSubmit={handleSubmit}>
+                        <form className="border p-4 rounded" style={{backgroundColor:'white',}} onSubmit={handleSubmit}>
                             <h2 className="mb-3 text-center">Admin Registration</h2>
                             {error && <p className="text-danger text-center">{error}</p>}
                             {success && <p className="text-success text-center">{success}</p>}
@@ -83,6 +83,13 @@ const AdminRegistration = () => {
                     </div>
                 </div>
             </div>
+            <img src={logo} alt="Logo" style={{ 
+                    position: 'absolute', 
+                    right: '10px', 
+                    bottom: '10px', 
+                    width: '100px', // Adjust size as needed
+                    height: 'auto' 
+                }} />
         </main>
     );
 };

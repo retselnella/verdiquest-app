@@ -190,46 +190,6 @@ const Rewards = () => {
 
     return (
         <div className='bodeh'>
-            <div>
-                <Header />
-            </div>
-            <div className='div3'>
-                <div className='div3'>
-                    <Modal show={showProductModal} onHide={handleCloseModal}>
-                        <Modal.Header closeButton>
-                            <Modal.Title><h1>Product Details</h1></Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Form onSubmit={handleProductSubmit}>
-                                <Form.Group controlId="formProductName">
-                                    <Form.Label>Product Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter product name" value={productName} onChange={handleProductNameChange} />
-                                </Form.Group>
-                                <Form.Group controlId="formProductDescription">
-                                    <Form.Label>Product Description</Form.Label>
-                                    <Form.Control as="textarea" rows={3} placeholder="Enter product description" value={productDescription} onChange={handleProductDescriptionChange} />
-                                </Form.Group>
-                                <Form.Group controlId="formProductSize">
-                                    <Form.Label>Product Size</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter product size" value={productSize} onChange={handleProductSizeChange} />
-                                </Form.Group>
-                                <Form.Group controlId="formProductQuantity">
-                                    <Form.Label>Product Quantity</Form.Label>
-                                    <Form.Control type="number" placeholder="Enter Quantity" value={productQuantity} onChange={handleProductQuantityChange} />
-                                </Form.Group>
-                                <Form.Group controlId="formPointsRequired">
-                                    <Form.Label>Points Required</Form.Label>
-                                    <Form.Control type="number" placeholder="Enter points required" value={pointsRequired} onChange={handlePointsRequiredChange} />
-                                </Form.Group>
-                                <br />
-                                <Button variant="primary" type="submit" style={{ color:"white" }}>Submit</Button>
-                            </Form>
-                        </Modal.Body>
-                    </Modal>
-                </div>
-
-  return (
-    <div>
       <div>
         <Header />
       </div>
