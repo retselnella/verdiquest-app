@@ -33,7 +33,6 @@ const {
   getTaskNameById,
   getTasks,
   getParticipantsForTask,
-  getRevenue,
   getAge,
   getRegUser,
   getTotalCompletedTask,

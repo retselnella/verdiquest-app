@@ -49,7 +49,7 @@ function Subscriber() {
               <thead>
                 <tr>
                   <th>SubscriberId</th>
-                  <th>UserId</th>
+                  <th>Organization</th>
                   <th>Status</th>
                   <th>SubscriptionEnd</th>
                 </tr>
@@ -59,7 +59,7 @@ function Subscriber() {
                   subscribers.map(subscriber => (
                     <tr key={subscriber.SubscriptionId}>
                       <td>{subscriber.SubscriptionId}</td>
-                      <td>{subscriber.UserId}</td>
+                      <td>{subscriber.OrganizationName}</td>
                       <td>{subscriber.Status}</td>
                       <td>{new Date(subscriber.SubscriptionEnd).toLocaleDateString()}</td>
                     </tr>

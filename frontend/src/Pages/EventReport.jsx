@@ -90,7 +90,7 @@ const Reports = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="6"
+                    colSpan="7"
                     style={{ textAlign: "center", color: "white" }}
                   >
                     No data found.

@@ -184,29 +184,21 @@ exports.addOrganization = (
 
 exports.getSubscriberList = () => {
   return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM subscription`;
+      const query = `
+          SELECT subscription.*, organization.OrganizationName
+          FROM subscription
+          INNER JOIN organization ON subscription.OrganizationId = organization.OrganizationId
+      `;
 
-    connection.query(query, (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
+      connection.query(query, (error, results) => {
+          if (error) {
+              return reject(error);
+          }
+          resolve(results);
+      });
   });
 };
 
-exports.getSubscriberList = () => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM subscription`;
-
-        connection.query(query, (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
-  };
 
 exports.getEvents = () => {
   return new Promise((resolve, reject) => {
@@ -477,7 +469,7 @@ exports.getTotalCompletedTask = () =>{
             DATE_FORMAT(DateFinished, '%Y-%m') AS Month, 
             COUNT(*) AS Completed_Task 
             FROM userdailytask 
-            WHERE status = 'completed' GROUP BY Month ORDER BY Month`;
+            WHERE TaskStatus = 'completed' GROUP BY Month ORDER BY Month`;
         connection.query(query,(error,result)=>{
             if(error){
                 return reject(error);
@@ -834,16 +826,3 @@ exports.getRevenue = () => {
     });
   });
 }
-
-exports.addCoordinator = (OrganizationId, Rank, PersonId, Username, Password) => {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO coordinator (OrganizationId, Rank, PersonId, Username, Password) VALUES (?, ?, ?, ?, ?)';
-
-        connection.query(query, [OrganizationId, Rank, PersonId, Username, Password], (error, results) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(results);
-        });
-    });
-};
