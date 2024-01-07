@@ -50,7 +50,8 @@ In this capstone project, the following Tech Stack will be used in developing th
       <td align="center" valign="top" width="20%"><a href="https://github.com/retselnella"><img src="https://avatars.githubusercontent.com/u/90435774?v=4?s=100" width="100px;" alt="Lester Allen P. Cabucos"/><br /><sub><b>Lester Cabucos</b></sub></a> <br>Project Manager</td>
       <td align="center" valign="top" width="20%"><a href="https://github.com/dcnacario"><img src="https://avatars.githubusercontent.com/u/74698488?v=4?s=100" width="100px;" alt="Danmar Cornelio P. Nacario"/><br /><sub><b>Danmar Nacario</b></sub></a> <br>Programmer</td>
       <td align="center" valign="top" width="20%"><a href="https://github.com/Death84256"><img src="https://avatars.githubusercontent.com/u/82586640?v=4?s=100" width="100px;" alt="Evanglemer Sebial"/><br /><sub><b>Evanglemer Sebial</b></sub></a> <br>Backend Developer</td>
+      <td align="center" valign="top" width="20%"><a href="https://github.com/Menshy"><img src="https://avatars.githubusercontent.com/u/34998384?v=4" width="100px;" alt="Ram Charles Gumandoy"/><br /><sub><b>Ram Gumandoy</b></sub></a> <br>QA Tester</td>
+      <td align="center" valign="top" width="20%"><a href="https://github.com/Chloiemarcoq"><img src="https://avatars.githubusercontent.com/u/147224165?v=4" width="100px;" alt="Chloie Quitco"/><br /><sub><b>Chloie Quitco</b></sub></a> <br>UI/UX </td>
     </tr>
   </tbody>
 </table>
-# testcommits
